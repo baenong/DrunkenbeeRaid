@@ -1,0 +1,33 @@
+extends base.pug
+include mixins/char-select
+
+
+block content 
+    .screen-title 
+        span #{user ? "유저정보 수정" : "유저 만들기"}
+    form(method="POST")#userForm
+        div.user-title
+            label(for="name") 유저이름 : 
+            if user 
+                input(type="text" name="name" value=`${user.name}` readonly).form-title
+            else 
+                input(type="text" name="name").form-title
+        span 캐릭터 목록
+        ul.char-list
+            each char in chars 
+                if char.owner
+                    li
+                        div.owner-exists
+                            if user && (String(char.owner._id) === String(user._id))
+                                input(type="checkbox" name="chars" id=`${char._id}` value=`${char._id}` checked)
+                            else
+                                input(type="checkbox" name="chars" id=`${char._id}` value=`${char._id}`)
+                            label(for=`${char._id}`) (#{char.owner.name})#{char.name}
+                        
+                else
+                    li
+                        div.owner-none
+                            +char-select(char)
+            else 
+                span.empty__message No Character found.
+        input(type="submit" name="submit" value="확인").edit-button.blue

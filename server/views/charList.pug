@@ -1,0 +1,11 @@
+extends base.pug
+
+block content 
+    div.screen-title
+        span 캐릭터 목록
+    ul.char-list
+        each char in chars
+            li.char-mixin
+                a(href=`/character/${char._id}`) #{char.name}(#{char.classname})
+        else 
+            span.empty__message No User found.

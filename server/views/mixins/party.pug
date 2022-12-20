@@ -1,0 +1,16 @@
+mixin party(party)
+    div.party-mixin
+        a(href=`/party/${party._id}`)
+            div.party-mixin__info
+                span.party-mixin__title #{party.title}
+                span.party-mixin__weekday #{party.weekday}요일
+                span.party-mixin__start #{party.startAt}
+            span 파티원(#{party.members.length})
+            ul.party-mixin__members
+                each member in party.members
+                    li.party-mixin__member
+                        span #{member.name}
+        ul.party-hashtags
+            each hashtag in party.hashtags
+                li.hashtag
+                    a(href=`/search?keyword=%23${hashtag.substr(1)}`)=hashtag

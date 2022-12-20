@@ -1,0 +1,5 @@
+mixin char-select(char, isCount)
+    input(type="checkbox" name="chars" id=`${char._id}` value=`${char._id}`)
+    label(for=`${char._id}`) #{char.name}
+    if isCount
+        span  (#{char.parties.length})

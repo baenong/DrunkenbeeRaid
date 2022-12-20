@@ -1,0 +1,28 @@
+extends base.pug
+include mixins/week-party
+
+block content
+    div.btn-week 
+        a(href="/week").edit-button.blue 전체
+        each num in [0,1,2,3,4,5,6]
+            a(href=`/week/search?keyword=${week[num]}`).edit-button.green #{week[num]}
+    ul.week-party__container
+        if !keyword
+            each num in [0,1,2,3,4,5,6]
+                li.week-party
+                    span.week-party__weekday #{week[num]}
+                    ul.week-party__parties
+                        each party in parties[num] 
+                            +week-party(party)
+                        else 
+                            li.week-empty
+                                span 해당 요일에 파티가 없습니다.
+        else
+            li.week-party
+                span.week-party__weekday #{keyword}
+                ul.week-party__parties
+                    each party in parties
+                        +week-party(party)
+                    else 
+                        li.week-empty
+                            span 해당 요일에 파티가 없습니다.

@@ -1,0 +1,9 @@
+mixin week-party(party)
+    li.week-party__party
+        span.week-party__start #{party.startAt}
+        div
+            span.week-party__title #{party.title}
+            ul.week-party__members
+                each member in party.members
+                    li.week-party__member
+                        span #{member.name}

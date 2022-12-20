@@ -1,0 +1,9 @@
+mixin comment(comment)
+    div.comment-mixin__container
+        div.comment-mixin__data
+            span #{comment.owner.name}
+            span #{comment.createdAt.getFullYear()}. #{comment.createdAt.getMonth()}. #{comment.createdAt.getDate()}
+            div.comment-mixin__text
+                p #{comment.text}
+            div.comment-delete
+                a(href=`/comment/${comment.id}/delete`).delete-button X

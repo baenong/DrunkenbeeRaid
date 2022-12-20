@@ -1,0 +1,36 @@
+.btn-week {
+  display: flex;
+  a {
+    padding: 0.5em 1em;
+    margin-right: 5px;
+  }
+}
+
+.week-party__container {
+  display: flex;
+  flex-direction: column;
+  .week-party {
+    display: flex;
+    border-top: 1px solid $gray6;
+    padding-top: 5px;
+    .week-party__weekday {
+      margin-right: 15px;
+    }
+    .week-party__party {
+      display: flex;
+      margin-bottom: 5px;
+      .week-party__start {
+        margin-right: 15px;
+      }
+      div {
+        .week-party__title {
+          font-family: "Jua";
+          font-size: 20px;
+        }
+      }
+    }
+    .week-empty {
+      margin-bottom: 5px;
+    }
+  }
+}

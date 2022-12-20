@@ -1,0 +1,20 @@
+header 
+    nav 
+        ul 
+            li
+                a(href="/") 파티
+            li
+                a(href="/week") 요일별
+            li
+                form(action="/search" method="GET").search__form
+                    input(placeholder="Search" type="text", name="keyword")
+            li
+                a(href="/party/create") 파티 생성
+            li
+                a(href="/user/create") 유저 생성
+            li
+                a(href="/user") 유저 목록
+            li
+                a(href="/character/create") 캐릭 생성
+            li 
+                a(href="/character") 캐릭 목록

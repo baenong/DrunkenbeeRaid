@@ -1,0 +1,92 @@
+#partyForm {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  .party-title {
+    margin-bottom: 10px;
+    label {
+      font-size: 20px;
+    }
+  }
+  .party-begin {
+    display: flex;
+    margin: 5px 0;
+
+    label {
+      font-size: 18px;
+    }
+
+    div:first-child {
+      display: flex;
+      flex-direction: column;
+      margin-right: 25px;
+
+      .party-begin__range {
+        width: 200px;
+      }
+      .party-begin__range:focus {
+        outline: none;
+      }
+
+      #weekdaymarks {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        writing-mode: vertical-lr;
+        width: 200px;
+        margin-bottom: 10px;
+        option {
+          padding: 0;
+        }
+      }
+    }
+
+    div:last-child {
+      display: flex;
+      flex-direction: column;
+
+      .party-begin__time {
+        margin-top: 5px;
+        width: 150px;
+        font-family: "Nanum-Gothic", sans-serif;
+      }
+    }
+  }
+  span {
+    font-size: 18px;
+    margin: 5px 0;
+  }
+  .current-member__list {
+    border-top: 0.5px solid $gray6;
+  }
+
+  .free-char__list {
+    border-bottom: 0.5px solid $gray6;
+    border-top: 0.5px solid $gray6;
+  }
+
+  .party-hashtag {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    span:first-child {
+      margin-bottom: 5px;
+    }
+    input {
+      padding: 5px;
+      margin-bottom: 5px;
+    }
+    span:last-child {
+      font-size: 15px;
+      color: $gray8;
+    }
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    input {
+      margin-right: 15px;
+    }
+  }
+}

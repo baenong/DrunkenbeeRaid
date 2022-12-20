@@ -1,0 +1,14 @@
+extends base.pug
+
+block content 
+    .screen-title 
+        span 캐릭터 만들기
+    form(method="POST")#charForm
+        .char-info
+            .char-label
+                label(for="name") 캐릭터명
+                label(for="classname") 직업
+            .char-input
+                input(type="text" name="name" id="name" value=`${char ? char.name : ""}`).form-title
+                input(type="text" name="classname" id="classname" value=`${char ? char.classname : ""}`).form-title
+        input(type="submit" value="만들기").edit-button.blue

@@ -1,0 +1,9 @@
+extends base.pug
+include mixins/party
+
+block content 
+    div.party-grid 
+        each party in parties 
+            +party(party)
+        else 
+            span.empty__message No Party found.

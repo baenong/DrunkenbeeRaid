@@ -1,0 +1,34 @@
+extends base.pug
+include mixins/comment
+
+block content
+    div.party-info__container(data-id=party._id)
+        div.party-info__title.screen-title
+            span #{party.title}
+        div.party-info__meta
+            span #{party.weekday}
+            span #{party.startAt}
+        a(href=`/party/${party._id}/edit`).edit-button.red edit
+        ul.hashtags
+            each hashtag in party.hashtags
+                li.hashtag
+                    a(href=`/search?keyword=%23${hashtag.substr(1)}`)=hashtag
+        span 파티원(#{party.members.length})
+        ul.party-info__members
+            each member in party.members
+                li.party-info__member
+                    span #{member.name}
+    div.party__comments
+        form.party__comments-form#commentForm
+            input(type="text" placeholder='User').comment-owner
+            textarea(rows='2', placeholder='Write a comment...').comment
+            button.edit-button.green Add Comment
+    ul#commentContainer
+        each comment in comments.reverse()
+            li.comment 
+                +comment(comment)
+        else 
+            span.empty__message No Comments found.
+        
+block scripts 
+    script(src="/static/js/commentSection.js")

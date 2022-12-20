@@ -1,0 +1,8 @@
+mixin usercard(user)
+    a(href=`/user/${user._id}`)
+        li.user-mixin
+            div.user-mixin__title
+                span #{user.name}
+            ul.user-mixin__char
+                each char in user.characters
+                    li #{char.name}(#{char.classname})

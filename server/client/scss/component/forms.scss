@@ -1,0 +1,31 @@
+input[type="checkbox"] {
+  display: none;
+}
+
+input[type="checkbox"] + label {
+  font-size: 16px;
+}
+
+input[type="checkbox"] + label:hover {
+  background-color: white;
+  color: $bg;
+}
+
+input[type="checkbox"]:checked + label {
+  background-color: goldenrod;
+  color: $bg;
+  font-weight: 700;
+}
+
+input[type="text"],
+textarea {
+  all: unset;
+  border: 1px $gray6 solid;
+}
+
+input.form-title {
+  font-size: 16px;
+  padding: 3px;
+  border: 0;
+  border-bottom: 0.5px solid $gray6;
+}

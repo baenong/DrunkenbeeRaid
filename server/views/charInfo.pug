@@ -1,0 +1,15 @@
+extends base.pug
+include mixins/party
+
+block content
+    div.char-info
+        span.screen-title #{char.name}
+        span #{char.classname}
+        span 유저 : #{char.owner.name}
+        a(href=`/character/${char._id}/edit`).edit-button.red edit
+        ul.char-info__parties.party-grid
+            each party in char.parties
+                li
+                    +party(party)
+            else 
+                span.empty__message No Party found.

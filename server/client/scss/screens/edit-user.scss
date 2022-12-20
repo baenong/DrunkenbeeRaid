@@ -1,0 +1,17 @@
+#userForm {
+  display: flex;
+  flex-direction: column;
+  .user-title {
+    margin-bottom: 15px;
+    label {
+      font-size: 18px;
+      font-weight: 700;
+    }
+  }
+  span {
+    font-size: 18px;
+    font-weight: 700;
+    padding: 10px 0;
+    border-bottom: 0.5px solid $gray6;
+  }
+}

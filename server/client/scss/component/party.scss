@@ -1,0 +1,41 @@
+.party-mixin {
+  border: 1px solid $gray2;
+  border-radius: 15px;
+  padding: 15px;
+  font-weight: 300;
+  font-size: 16px;
+  .party-mixin__info {
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid white;
+    .party-mixin__title {
+      font-size: 32px;
+      font-family: "Jua";
+      margin-right: 10px;
+    }
+    .party-mixin__start {
+      margin-left: 5px;
+    }
+  }
+
+  .party-mixin__members {
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 10px;
+  }
+
+  .party-hashtags {
+    color: $link;
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    li {
+      margin-right: 5px;
+    }
+  }
+}
+
+.party-mixin:hover {
+  border: 2px solid $link;
+}

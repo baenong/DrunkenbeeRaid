@@ -1,0 +1,50 @@
+extends base.pug
+include mixins/char-select
+
+block content 
+    div.screen-title 
+            span #{selectedParty ? "파티정보 수정" : "파티 만들기"}
+    form(method="POST")#partyForm
+        div.party-title
+            label(for="title") 파티이름 : 
+            input(type="text" name="title" value=`${selectedParty ? selectedParty.title : ""}` placeholder="입력안하면 자동 생성").form-title
+        div.party-begin
+            div
+                label(for="weekday") 요일 :
+                input(type="range" name="weekday" min="0" max="6" step="1" value=`${selectedParty ? selectedParty.weekday : "0"}` list="weekdaymarks").party-begin__range
+                datalist#weekdaymarks 
+                    option(value="0" label="수")
+                    option(value="1" label="목")
+                    option(value="2" label="금")
+                    option(value="3" label="토")
+                    option(value="4" label="일")
+                    option(value="5" label="월")
+                    option(value="6" label="화")
+            div 
+                label(for="startAt") 출발시간 : 
+                input(type="time" name="startAt" value=`${selectedParty ? selectedParty.startAt : "20:00"}`).party-begin__time
+        div
+            span 현재인원 : 
+            span.count-current #{selectedParty ? selectedParty.members.length : 0}
+        span 캐릭터목록 : 닉네임(소속파티갯수)
+        if members
+            ul.current-member__list.char-list
+                each member in members 
+                    li.current-member
+                        input(type="hidden" name="existing" value=`${member._id}`)
+                        input(type="checkbox" name="chars" id=`${member._id}` value=`${member._id}` checked)
+                        label(for=`${member._id}`) #{member.name}
+        ul.free-char__list.char-list
+            each char in freeChars
+                li.free-char
+                    +char-select(char, true)
+        div.party-hashtag
+            span Hashtags
+            input(name="hashtags", placeholder='Hashtags, separated by comma', type="text" value=`${selectedParty ? selectedParty.hashtags : ""}`)
+            span comma(,)로 구분되며 #은 안 붙여도 됩니다.
+        div.button-container
+            input(type="submit" value=`${selectedParty ? "변경" : "파티 만들기"}`).edit-button.blue
+            if selectedParty
+                a(href=`/party/${selectedParty._id}/delete`).edit-button.red 파티 펑
+block scripts
+    script(src="/static/js/editParty.js") 
