@@ -75,7 +75,7 @@ export const postEditUser = async (req, res) => {
     characters: chars,
   });
 
-  res.redirect("/");
+  res.redirect(`/user/${id}`);
 };
 
 export const getCreateUser = async (req, res) => {

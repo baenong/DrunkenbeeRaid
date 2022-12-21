@@ -223,7 +223,7 @@ export const postEditParty = async (req, res) => {
     console.log(error);
   }
 
-  return res.redirect("/");
+  return res.redirect(`/party/${id}`);
 };
 
 export const postEditComment = async (req, res) => {

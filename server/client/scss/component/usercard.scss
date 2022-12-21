@@ -1,23 +1,23 @@
 .user-list {
   display: grid;
-  gap: 10px;
+  gap: $rem10;
   grid-template-columns: repeat(2, 1fr);
-  margin-top: 15px;
+  margin-top: $rem15;
   .user-mixin {
     border: 1px solid $gray6;
-    margin-bottom: 5px;
-    padding: 10px;
-    border-radius: 10px;
+    margin-bottom: $rem05;
+    padding: $rem10;
+    border-radius: $rem10;
     .user-mixin__title {
-      font-size: 18px;
+      font-size: 1.8rem;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: $rem10;
     }
     .user-mixin__char {
-      font-size: 16px;
+      font-size: 1.6rem;
       font-weight: 100;
       li {
-        line-height: 18px;
+        line-height: 1.8rem;
       }
     }
   }

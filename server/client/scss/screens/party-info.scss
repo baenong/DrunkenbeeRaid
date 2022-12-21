@@ -4,28 +4,28 @@
   flex-direction: column;
 
   .party-info__meta {
-    font-size: 20px;
+    font-size: 2rem;
     & span:first-child {
-      margin-right: 15px;
+      margin-right: $rem15;
     }
   }
 
   ul {
-    margin-bottom: 15px;
+    margin-bottom: $rem15;
     display: flex;
     flex-wrap: wrap;
   }
   ul + span {
-    font-size: 26px;
+    font-size: 2.6rem;
     font-weight: 700;
   }
   .party-info__members {
-    margin-top: 15px;
-    font-size: 22px;
+    margin-top: $rem15;
+    font-size: 1.8rem;
     font-weight: 300;
     display: grid;
-    row-gap: 10px;
-    column-gap: 25px;
+    row-gap: $rem10;
+    column-gap: 2.5rem;
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -35,14 +35,15 @@
   margin: 0 auto;
   border-top: 0.5px solid $gray6;
   border-bottom: 0.5px solid $gray6;
-  padding: 20px 0px 5px 0;
+  padding: 2rem 0px $rem05 0;
   #commentForm {
     display: flex;
     flex-direction: column;
     .comment-owner,
     .comment {
-      margin-bottom: 5px;
-      padding: 10px;
+      font-size: $rem15;
+      margin-bottom: $rem05;
+      padding: $rem10;
     }
   }
 }
@@ -52,33 +53,33 @@
   margin: 0 auto;
 
   .comment-mixin__container {
-    margin: 20px 0;
+    margin: 2rem 0;
     width: 100%;
     display: flex;
     align-items: flex-start;
 
     .comment-mixin__data {
-      max-width: calc(100% - 40px);
+      max-width: calc(100% - 4rem);
       vertical-align: middle;
       flex-grow: 1;
-      padding: 0 20px;
+      padding: 0 2rem;
       span:first-child {
-        font-size: 15px;
-        margin-right: 5px;
-        line-height: 22px;
+        font-size: $rem15;
+        margin-right: $rem05;
+        line-height: 2.2rem;
       }
       span:nth-child(2) {
-        font-size: 14px;
+        font-size: 1.4rem;
         color: $gray6;
       }
       .comment-mixin__text {
-        font-size: 16px;
+        font-size: 1.6rem;
         font-weight: 300;
         width: 95%;
         p {
           white-space: pre-wrap;
           word-wrap: break-word;
-          line-height: 17px;
+          line-height: 1.7rem;
         }
       }
       .comment-delete {
@@ -86,6 +87,7 @@
         justify-content: end;
       }
       .delete-button {
+        font-size: 1.4rem;
         color: $red;
       }
       &:hover {

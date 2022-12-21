@@ -1,15 +1,20 @@
 .char-list {
-  padding: 10px 5px;
+  padding: $rem10 $rem05;
+  font-size: 1.5rem;
   li {
-    line-height: 18px;
-    margin-bottom: 6px;
+    line-height: 2rem;
+    margin-bottom: 0.6rem;
   }
 }
 
 .screen-title {
   font-family: "Jua";
-  font-size: 48px;
-  padding: 5px;
+  font-size: 4.8rem;
+  padding: $rem05;
   border-bottom: 2px solid white;
-  margin-bottom: 10px;
+  margin-bottom: $rem10;
+}
+
+.empty__message {
+  font-size: $rem15;
 }

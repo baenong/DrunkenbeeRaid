@@ -5,6 +5,7 @@ html(lang="ko")
     head 
         title #{pageTitle}
         link(rel="stylesheet", href="/static/css/styles.css")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
     body 
         if messages.error 
             +message("error", messages.error)

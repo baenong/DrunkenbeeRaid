@@ -26,6 +26,10 @@ a {
   text-decoration: none;
 }
 
+html {
+  font-size: 10px;
+}
+
 body {
   font-family: "Nanum-Gothic", sans-serif;
   background-color: $bg;
@@ -37,7 +41,7 @@ body::-webkit-scrollbar {
 }
 
 main {
-  max-width: 1200px;
+  max-width: 120rem;
   width: 100%;
   margin: 0 auto;
   margin-top: 92px;
@@ -46,13 +50,53 @@ main {
 
 @media screen and (max-width: 1200px) {
   main {
-    max-width: 800px;
+    max-width: 80rem;
   }
 }
 
 @media screen and (max-width: 800px) {
   main {
-    max-width: 400px;
+    max-width: 60rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  main {
+    max-width: 35rem;
+  }
+  header {
+    nav {
+      font-size: 1.6rem;
+      ul {
+        li {
+          padding: 0;
+        }
+        li:first-child {
+          margin: 0;
+        }
+        li:last-child {
+          margin-right: 5px;
+        }
+        li.left-menu {
+          padding: 5px;
+          white-space: nowrap;
+        }
+        li.right-menu {
+          width: 2.8rem;
+          font-size: 1.4rem;
+        }
+      }
+    }
+  }
+  #partyForm {
+    .party-begin {
+      div:first-child {
+        .party-begin__range,
+        #weekdaymarks {
+          width: 15rem;
+        }
+      }
+    }
   }
 }
 
@@ -76,7 +120,7 @@ main {
     bottom: 0px;
     margin: 0 auto;
     max-width: 200px;
-    padding: 10px 20px;
+    padding: $rem10 2rem;
     border-radius: 10px 10px 0 0;
     color: white;
     animation: goAway 0.5s ease-in-out forwards;

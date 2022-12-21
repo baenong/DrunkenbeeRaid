@@ -4,25 +4,27 @@ header {
   nav {
     background-color: beige;
     color: $bg;
-    font-size: 18px;
+    font-family: "Jua", sans-serif;
+    font-size: 1.8rem;
     ul {
-      font-family: "Jua", sans-serif;
       display: flex;
       width: 100vw;
       li {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 5px;
+        padding: $rem05;
         transition: background-color 0.3s ease-in-out;
         a {
           text-align: center;
         }
       }
       li:first-child {
-        margin-left: 15px;
+        margin-left: $rem15;
+        margin-right: 1rem;
       }
-      li:not(:nth-child(3)):hover {
+      li:not(:nth-child(3)):hover,
+      .search__form > input {
         background-color: $bg;
         color: beige;
       }
@@ -30,14 +32,13 @@ header {
         flex-grow: 1;
       }
       li:last-child {
-        margin-right: 15px;
+        margin-right: $rem15;
       }
       .search__form {
-        width: 90%;
+        width: 95%;
         input {
-          width: 95%;
-          background-color: $bg;
-          padding: 5px;
+          width: 90%;
+          padding: $rem05;
           border: 1px solid gray;
           border-radius: 5px;
           margin: 0 auto;

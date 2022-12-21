@@ -1,28 +1,29 @@
 #partyForm {
   display: flex;
   flex-direction: column;
-  padding: 5px;
+  padding: $rem05;
   .party-title {
-    margin-bottom: 10px;
+    margin-bottom: $rem10;
     label {
-      font-size: 20px;
+      font-size: 2rem;
     }
   }
   .party-begin {
     display: flex;
-    margin: 5px 0;
+    margin: $rem05 0;
 
     label {
-      font-size: 18px;
+      font-size: 1.8rem;
     }
 
     div:first-child {
       display: flex;
       flex-direction: column;
-      margin-right: 25px;
+      margin-right: 2.5rem;
 
-      .party-begin__range {
-        width: 200px;
+      .party-begin__range,
+      #weekdaymarks {
+        width: 20rem;
       }
       .party-begin__range:focus {
         outline: none;
@@ -33,8 +34,8 @@
         flex-direction: column;
         justify-content: space-between;
         writing-mode: vertical-lr;
-        width: 200px;
-        margin-bottom: 10px;
+        margin-bottom: $rem10;
+        font-size: 1.4rem;
         option {
           padding: 0;
         }
@@ -46,15 +47,15 @@
       flex-direction: column;
 
       .party-begin__time {
-        margin-top: 5px;
-        width: 150px;
+        margin-top: $rem05;
+        width: 15rem;
         font-family: "Nanum-Gothic", sans-serif;
       }
     }
   }
   span {
-    font-size: 18px;
-    margin: 5px 0;
+    font-size: 1.8rem;
+    margin: $rem05 0;
   }
   .current-member__list {
     border-top: 0.5px solid $gray6;
@@ -66,18 +67,20 @@
   }
 
   .party-hashtag {
-    margin-top: 10px;
+    margin-top: $rem10;
     display: flex;
     flex-direction: column;
     span:first-child {
-      margin-bottom: 5px;
+      margin-bottom: $rem05;
     }
     input {
-      padding: 5px;
-      margin-bottom: 5px;
+      color: $link;
+      font-size: $rem15;
+      padding: $rem05;
+      margin-bottom: $rem05;
     }
     span:last-child {
-      font-size: 15px;
+      font-size: $rem15;
       color: $gray8;
     }
   }
@@ -86,7 +89,7 @@
     display: flex;
     justify-content: center;
     input {
-      margin-right: 15px;
+      margin-right: $rem15;
     }
   }
 }

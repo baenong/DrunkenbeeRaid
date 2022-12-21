@@ -6,10 +6,10 @@
   cursor: pointer;
   display: flex;
   align-self: center;
-  font-size: 1rem;
+  font-size: 1.6rem;
   font-weight: 400;
   line-height: 1;
-  margin: 15px 0 10px 0;
+  margin: $rem15 0 $rem10 0;
   padding: 0.7em 2em;
   text-decoration: none;
   text-align: center;
@@ -49,10 +49,16 @@
   }
 }
 
+.selected {
+  border: 2px solid $green;
+  box-shadow: 0 0 40px 40px $green inset;
+}
+
 .hashtags {
   display: flex;
   .hashtag {
+    font-size: $rem15;
     color: $link;
-    margin-right: 3px;
+    margin-right: 0.3rem;
   }
 }

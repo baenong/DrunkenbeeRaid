@@ -2,16 +2,16 @@
   display: flex;
   flex-direction: column;
   .user-title {
-    margin-bottom: 15px;
+    margin-bottom: $rem15;
     label {
-      font-size: 18px;
+      font-size: 1.8rem;
       font-weight: 700;
     }
   }
   span {
-    font-size: 18px;
+    font-size: 1.8rem;
     font-weight: 700;
-    padding: 10px 0;
+    padding: $rem10 0;
     border-bottom: 0.5px solid $gray6;
   }
 }

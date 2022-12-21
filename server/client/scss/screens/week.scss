@@ -1,5 +1,6 @@
 .btn-week {
   display: flex;
+  flex-wrap: wrap;
   a {
     padding: 0.5em 1em;
     margin-right: 5px;
@@ -9,28 +10,40 @@
 .week-party__container {
   display: flex;
   flex-direction: column;
+  font-size: $rem15;
   .week-party {
     display: flex;
     border-top: 1px solid $gray6;
-    padding-top: 5px;
+    padding-top: $rem10;
     .week-party__weekday {
-      margin-right: 15px;
+      margin-right: $rem15;
     }
-    .week-party__party {
-      display: flex;
-      margin-bottom: 5px;
-      .week-party__start {
-        margin-right: 15px;
-      }
-      div {
-        .week-party__title {
-          font-family: "Jua";
-          font-size: 20px;
+    .week-party__parties {
+      flex-grow: 1;
+      .week-party__party {
+        display: flex;
+        .week-party__start {
+          margin-right: $rem15;
+        }
+        div {
+          min-width: 15rem;
+          .week-party__title {
+            font-family: "Jua";
+            font-size: 2rem;
+          }
+          .week-party__members {
+            .week-party__member {
+              margin-bottom: 5px;
+            }
+          }
         }
       }
+      .week-empty {
+        margin-bottom: $rem05;
+      }
     }
-    .week-empty {
-      margin-bottom: 5px;
+    .week-party__parties::-webkit-scrollbar {
+      display: none;
     }
   }
 }
