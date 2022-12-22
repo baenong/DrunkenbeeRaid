@@ -27,7 +27,7 @@ block content
         div
             span 현재인원 : 
             span.count-current #{selectedParty ? selectedParty.members.length : 0}
-        span 캐릭터목록 : 닉네임(소속파티갯수)
+        span 캐릭터목록 : 닉네임(소속파티갯수) ※ 목록에 없을 경우 캐릭목록에서 생성
         if members
             ul.current-member__list.char-list
                 each member in members 

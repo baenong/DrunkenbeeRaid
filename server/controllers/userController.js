@@ -12,12 +12,22 @@ export const getUserList = async (req, res) => {
   }
 };
 
+/**
+ *
+ * @event 2022. 12. 22. 유저 정보에 달았던 코멘트들도 불러오기
+ * view도 수정
+ */
 export const getUserInfo = async (req, res) => {
   const {
     params: { id },
   } = req;
   try {
-    const user = await User.findById(id).populate("characters");
+    const user = await User.findById(id)
+      .populate("characters", "name")
+      .populate({
+        path: "comments",
+        populate: { path: "party", select: "title" },
+      });
     return res.render("userInfo", { pageTitle: "User", user });
   } catch {
     req.flash("error", "잘못된 유저ID");

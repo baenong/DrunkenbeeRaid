@@ -7,7 +7,9 @@ const week = ["수", "목", "금", "토", "일", "월", "화"];
 
 export const home = async (req, res) => {
   try {
-    const parties = await Party.find({}).populate("members");
+    const parties = await Party.find({})
+      .sort({ weekday: "desc" })
+      .populate("members");
     return res.render("home", { pageTitle: "Home", parties });
   } catch {
     req.flash("error", "에러 발생");
@@ -15,11 +17,6 @@ export const home = async (req, res) => {
   }
 };
 
-/**
- * Search : 캐릭터, 유저, hashtag로 검색가능
- * @param {*} req
- * @param {*} res
- */
 export const search = async (req, res) => {
   const { keyword } = req.query;
   let parties = [];
@@ -48,11 +45,6 @@ export const search = async (req, res) => {
   }
 };
 
-/**
- * 파티 정보 보기(id 받아서)
- * @param {*} req
- * @param {*} res
- */
 export const showPartyInfo = async (req, res) => {
   const {
     params: { id },
@@ -105,28 +97,31 @@ export const postCreateParty = async (req, res) => {
   return res.redirect("/");
 };
 
+/**
+ * @event 2022. 12. 22. 수요일 제외 정렬 문제 있었던 것 수정
+ */
 export const getWeekParty = async (req, res) => {
   try {
     const wedParty = await Party.find({ weekday: "수" })
       .sort({ startAt: "asc" })
       .populate("members");
     const thuParty = await Party.find({ weekday: "목" })
-      .sort({ startAt: "desc" })
+      .sort({ startAt: "asc" })
       .populate("members");
     const friParty = await Party.find({ weekday: "금" })
-      .sort({ startAt: "desc" })
+      .sort({ startAt: "asc" })
       .populate("members");
     const satParty = await Party.find({ weekday: "토" })
-      .sort({ startAt: "desc" })
+      .sort({ startAt: "asc" })
       .populate("members");
     const sunParty = await Party.find({ weekday: "일" })
-      .sort({ startAt: "desc" })
+      .sort({ startAt: "asc" })
       .populate("members");
     const monParty = await Party.find({ weekday: "월" })
-      .sort({ startAt: "desc" })
+      .sort({ startAt: "asc" })
       .populate("members");
     const tueParty = await Party.find({ weekday: "화" })
-      .sort({ startAt: "desc" })
+      .sort({ startAt: "asc" })
       .populate("members");
     const parties = [
       wedParty,
