@@ -21,7 +21,7 @@ header {
       }
       li:first-child {
         margin-left: $rem15;
-        margin-right: 1rem;
+        margin-right: $rem10;
       }
       li:not(:nth-child(3)):hover,
       .search__form > input {
@@ -32,12 +32,15 @@ header {
         flex-grow: 1;
       }
       li:last-child {
+        margin-left: $rem10;
         margin-right: $rem15;
       }
       .search__form {
-        width: 95%;
+        width: 100%;
+        display: flex;
+        align-items: center;
         input {
-          width: 90%;
+          width: 95%;
           padding: $rem05;
           border: 1px solid gray;
           border-radius: 5px;

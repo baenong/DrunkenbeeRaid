@@ -1,19 +1,14 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
+const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const BASE_JS = "./server/client/js/";
 
-export default {
+module.exports = {
   entry: {
     main: BASE_JS + "main.js",
     commentSection: BASE_JS + "commentSection.js",
     editParty: BASE_JS + "editParty.js",
   },
-  mode: "development",
-  watch: true,
   plugins: [
     new MiniCssExtractPlugin({
       filename: "css/styles.css",

@@ -3,7 +3,9 @@ include mixins/party
 
 block content
     div.char-info
-        span.screen-title #{char.name}
+        .list-header
+            .screen-title
+                span #{char.name}
         span #{char.classname}
         span 유저 : #{char.owner.name}
         a(href=`/character/${char._id}/edit`).edit-button.red edit
@@ -12,4 +14,4 @@ block content
                 li
                     +party(party)
             else 
-                span.empty__message No Party found.
+                span.empty__message 파티가 없습니다.

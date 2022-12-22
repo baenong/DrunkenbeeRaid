@@ -58,32 +58,28 @@ main {
   main {
     max-width: 60rem;
   }
+  .char-list {
+    column-count: 2;
+  }
 }
 
 @media screen and (max-width: 600px) {
   main {
     max-width: 35rem;
   }
+  .char-list {
+    column-count: 1;
+  }
   header {
     nav {
       font-size: 1.6rem;
       ul {
-        li {
-          padding: 0;
-        }
-        li:first-child {
-          margin: 0;
-        }
-        li:last-child {
-          margin-right: 5px;
-        }
         li.left-menu {
           padding: 5px;
           white-space: nowrap;
         }
         li.right-menu {
           width: 2.8rem;
-          font-size: 1.4rem;
         }
       }
     }
@@ -116,6 +112,7 @@ main {
   justify-content: center;
   overflow-y: hidden;
   .message {
+    font-size: 1.4rem;
     position: fixed;
     bottom: 0px;
     margin: 0 auto;

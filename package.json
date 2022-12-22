@@ -2,10 +2,13 @@
   "name": "drunkenraid",
   "version": "1.0.0",
   "description": "drunkenbee raid",
-  "type": "module",
   "scripts": {
+    "start": "node build/init.js",
+    "build": "npm run build:server && npm run build:assets",
+    "build:server": "babel server -d build",
+    "build:assets": "webpack --mode=production",
     "dev:server": "nodemon",
-    "dev:assets": "webpack --mode=development",
+    "dev:assets": "webpack --mode=development -w",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:assets\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

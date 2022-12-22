@@ -7,7 +7,7 @@ import rootRouter from "./routers/rootRouter.js";
 import partyRouter from "./routers/partyRouter.js";
 import userRouter from "./routers/userRouter.js";
 import charRouter from "./routers/charRouter.js";
-import { loginMiddleware } from "./middlewares.js";
+// import { loginMiddleware } from "./middlewares.js";
 const app = express();
 app.use(cors());
 
@@ -27,7 +27,7 @@ app.use(
 );
 
 app.use(expressFlash());
-app.use(loginMiddleware);
+// app.use(loginMiddleware);
 
 app.use("/static", express.static("assets"));
 app.use("/", rootRouter);

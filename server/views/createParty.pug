@@ -2,7 +2,8 @@ extends base.pug
 include mixins/char-select
 
 block content 
-    div.screen-title 
+    .list-header
+        .screen-title 
             span #{selectedParty ? "파티정보 수정" : "파티 만들기"}
     form(method="POST")#partyForm
         div.party-title
@@ -38,6 +39,8 @@ block content
             each char in freeChars
                 li.free-char
                     +char-select(char, true)
+            else 
+                span.empty__message 캐릭터가 없습니다.
         div.party-hashtag
             span Hashtags
             input(name="hashtags", placeholder='Hashtags, separated by comma', type="text" value=`${selectedParty ? selectedParty.hashtags : ""}`)

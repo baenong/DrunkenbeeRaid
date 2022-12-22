@@ -2,10 +2,12 @@ extends base.pug
 include mixins/usercard
 
 block content 
-    .screen-title 
-        span 유저 목록
+    .list-header
+        .screen-title 
+            span 유저 목록
+        a(href="/user/create").edit-button.red create
     ul.user-list 
         each user in users
             +usercard(user)
         else 
-            span.empty__message No User found.
+            span.empty__message 유저가 없습니다.

@@ -1,7 +1,12 @@
 import "dotenv/config";
+import "regenerator-runtime";
 
-import "./db.js";
-import app from "./server.js";
+import "./db";
+import "./models/Character";
+import "./models/Party";
+import "./models/User";
+import "./models/Comment";
+import app from "./server";
 
 const PORT = process.env.PORT || 4000;
 

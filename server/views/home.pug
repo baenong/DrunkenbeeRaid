@@ -2,8 +2,10 @@ extends base.pug
 include mixins/party
 
 block content 
+    div.list-header
+        a(href="/party/create").edit-button.red create
     div.party-grid 
         each party in parties 
             +party(party)
         else 
-            span.empty__message No Party found.
+            span.empty__message 파티가 없습니다.

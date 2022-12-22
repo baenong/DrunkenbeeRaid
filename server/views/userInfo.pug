@@ -2,8 +2,9 @@ extends base.pug
 
 block content
     div.user-info__container
-        .screen-title 
-            span #{user.name}
+        .list-header
+            .screen-title 
+                span #{user.name}
         a(href=`/user/${user._id}/edit`).edit-button.red edit
         ul.char-list
             each char in user.characters 

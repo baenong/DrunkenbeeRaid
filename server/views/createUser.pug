@@ -3,8 +3,9 @@ include mixins/char-select
 
 
 block content 
-    .screen-title 
-        span #{user ? "유저정보 수정" : "유저 만들기"}
+    .list-header
+        .screen-title 
+            span #{user ? "유저정보 수정" : "유저 만들기"}
     form(method="POST")#userForm
         div.user-title
             label(for="name") 유저이름 : 
@@ -29,5 +30,5 @@ block content
                         div.owner-none
                             +char-select(char)
             else 
-                span.empty__message No Character found.
+                span.empty__message 캐릭터가 없습니다.
         input(type="submit" name="submit" value="확인").edit-button.blue
