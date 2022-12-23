@@ -1,9 +1,12 @@
 mixin comment(comment)
-    div.comment-mixin__container
-        div.comment-mixin__data
-            span #{comment.owner.name}
-            span #{comment.createdAt.getFullYear()}. #{comment.createdAt.getMonth() + 1}. #{comment.createdAt.getDate()}
-            div.comment-mixin__text
+    .comment-mixin__container
+        .comment-mixin__data
+            .comment-mixin__top
+                .comment-info
+                    span #{comment.owner.name}
+                    span #{comment.createdAt.getFullYear()}. #{comment.createdAt.getMonth() + 1}. #{comment.createdAt.getDate()}.
+                .comment-delete
+                    a(href=`/comment/${comment.id}/delete`).delete-button X
+            .comment-mixin__text
                 p #{comment.text}
-            div.comment-delete
-                a(href=`/comment/${comment.id}/delete`).delete-button X
+            

@@ -12,11 +12,6 @@ export const getUserList = async (req, res) => {
   }
 };
 
-/**
- *
- * @event 2022. 12. 22. 유저 정보에 달았던 코멘트들도 불러오기
- * view도 수정
- */
 export const getUserInfo = async (req, res) => {
   const {
     params: { id },
@@ -85,7 +80,6 @@ export const postEditUser = async (req, res) => {
         partyIds.push(party);
       });
     });
-    console.log(partyIds);
 
     await User.updateMany(
       { _id: { $in: oldOwnerIds } },

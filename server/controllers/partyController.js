@@ -115,9 +115,6 @@ export const postCreateParty = async (req, res) => {
   return res.redirect("/");
 };
 
-/**
- * @event 2022. 12. 22. 수요일 제외 정렬 문제 있었던 것 수정
- */
 export const getWeekParty = async (req, res) => {
   try {
     const wedParty = await Party.find({ weekday: "수" })
@@ -203,8 +200,8 @@ export const deleteParty = async (req, res) => {
 
     // 해당 파티의 댓글들도 전부 삭제
     const comments = await Comment.find({ party: selectedParty._id });
-    comments.forEach((elem) => {
-      deleteCommentOnce(elem);
+    comments.forEach(async (elem) => {
+      await deleteCommentOnce(elem);
     });
 
     await Party.findByIdAndDelete(id);
@@ -330,12 +327,11 @@ export const postEditComment = async (req, res) => {
       party: id,
     });
 
-    const party = await Party.findById(id);
-
-    owner.comments.push(comment._id);
-    owner.save();
-    party.comments.push(comment._id);
-    party.save();
+    await User.updateOne(
+      { name: commenter },
+      { $push: { comments: comment._id } }
+    );
+    await Party.findByIdAndUpdate(id, { $push: { comments: comment._id } });
 
     return res.status(201).json({
       name: owner.name,
@@ -355,24 +351,15 @@ export const getDeleteComment = async (req, res) => {
 
   try {
     const comment = await Comment.findById(id);
-    // const user = await User.findById(comment.owner);
-    // const party = await Party.findById(comment.party);
 
     if (!comment) {
       return res.status(400).render("404", { pageTitle: "Comment not found." });
     }
 
-    // await Comment.findByIdAndDelete(id);
-    // user.comments.splice(user.comments.indexOf(id), 1);
-    // user.save();
-
-    // party.comments.splice(party.comments.indexOf(id), 1);
-    // party.save();
-
     deleteCommentOnce(comment);
 
     req.flash("success", "댓글 삭제됨");
-    return res.redirect(`/party/${party._id}`);
+    return res.redirect(`/party/${comment.party}`);
   } catch {
     req.flash("error", "댓글 삭제 실패");
     res.redirect("/");
@@ -380,22 +367,15 @@ export const getDeleteComment = async (req, res) => {
 };
 
 const deleteCommentOnce = async (comment) => {
-  const user = await User.findById(comment.owner);
-  const party = await Party.findById(comment.party);
-
   await Comment.findByIdAndDelete(comment._id);
-  user.comments.splice(user.comments.indexOf(comment._id), 1);
-  user.save();
-
-  party.comments.splice(party.comments.indexOf(comment._id), 1);
-  party.save();
+  await User.findByIdAndUpdate(comment.owner, {
+    $pull: { comments: comment._id },
+  });
+  await Party.findByIdAndUpdate(comment.party, {
+    $pull: { comments: comment._id },
+  });
 };
 
-/**
- *
- * @param {*} weekday : String
- * @returns
- */
 const convertNumToWeek = (weekday) => {
   const weeknum = Number(weekday);
 

@@ -21,15 +21,23 @@ const addComment = (text, name, createdAt, id) => {
   commentData.className = "comment-mixin__data";
   commentContainer.appendChild(commentData);
 
+  const commentTop = document.createElement("div");
+  commentTop.className = "comment-mixin__top";
+  commentData.appendChild(commentTop);
+
+  const commentInfo = document.createElement("div");
+  commentInfo.className = "comment-info";
+  commentTop.appendChild(commentInfo);
+
   const spanName = document.createElement("span");
   spanName.innerText = name;
-  commentData.appendChild(spanName);
+  commentInfo.appendChild(spanName);
 
   const spanDate = document.createElement("span");
   spanDate.innerText = `${new Intl.DateTimeFormat("ko").format(
     new Date(createdAt)
   )}`;
-  commentData.appendChild(spanDate);
+  commentInfo.appendChild(spanDate);
 
   const commentText = document.createElement("div");
   commentText.className = "comment-mixin__text";
@@ -46,7 +54,7 @@ const addComment = (text, name, createdAt, id) => {
   a.href = `/comment/${id}/delete`;
   a.innerText = "X";
   commentDelete.appendChild(a);
-  commentData.appendChild(commentDelete);
+  commentTop.appendChild(commentDelete);
 
   partyComments.prepend(newComment);
 };

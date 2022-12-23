@@ -10,6 +10,7 @@
   .user-schedule__title {
     font-family: "Jua", sans-serif;
     font-size: 2rem;
+    border-bottom: 1px solid whitesmoke;
     margin: 25px 0 10px 0;
   }
   .user-schedules::-webkit-scrollbar {
@@ -27,9 +28,15 @@
       border-radius: 10px;
       .schedule {
         width: 60px;
+        span {
+          text-align: center;
+        }
         .schedule-info {
           display: flex;
           flex-direction: column;
+          padding-bottom: 3px;
+          margin-bottom: 5px;
+          border-bottom: 1px solid $gray6;
         }
         .schedule-title {
           overflow: hidden;
