@@ -2,7 +2,7 @@ extends base.pug
 include mixins/comment
 
 block content
-    div.user-info__container
+    .user-info__container
         .list-header
             .screen-title 
                 span #{user.name}
@@ -12,7 +12,19 @@ block content
                 li 
                     a(href=`/character/${char._id}`)
                         span #{char.name}
-        ul#commentContainer
+        .user-schedule__title 참여 파티
+        ul.user-schedules
+            each schedule in user.parties
+                each num in [0,1,2,3,4,5,6]
+                    if schedule.weekday === week[num]
+                        li(id=`weekday${num}`)
+                            .schedule
+                                .schedule-info
+                                    span #{schedule.weekday}
+                                    span #{schedule.startAt}
+                                .schedule-title
+                                    span #{schedule.title}
+        ul#commentContainer.user-info__comment
             each comment in user.comments.reverse()
                 li.comment 
                     a(href=`/party/${comment.party._id}`)

@@ -9,7 +9,7 @@ export const home = async (req, res) => {
   try {
     const parties = await Party.find({})
       .sort({ weekday: "desc" })
-      .populate("members");
+      .populate("members", "name");
     return res.render("home", { pageTitle: "Home", parties });
   } catch {
     req.flash("error", "에러 발생");
@@ -26,7 +26,7 @@ export const search = async (req, res) => {
       if (keyword.startsWith("#")) {
         parties = await Party.find({ hashtags: keyword })
           .sort({ weekday: "desc" })
-          .populate("members");
+          .populate("members", "name");
       } else {
         parties = await Party.find({
           $or: [
@@ -35,7 +35,7 @@ export const search = async (req, res) => {
           ],
         })
           .sort({ weekday: "desc" })
-          .populate("members");
+          .populate("members", "name");
       }
     }
     return res.render("home", { pageTitle: "Search", parties });
@@ -51,8 +51,11 @@ export const showPartyInfo = async (req, res) => {
   } = req;
 
   try {
-    const party = await Party.findById(id).populate("members");
-    const comments = await Comment.find({ party: id }).populate("owner");
+    const party = await Party.findById(id).populate("members", "name");
+    const comments = await Comment.find({ party: id }).populate(
+      "owner",
+      "name"
+    );
     res.render("partyInfo", { pageTitle: "Party Info", party, comments });
   } catch {
     req.flash("error", "잘못된 파티ID");
@@ -80,13 +83,28 @@ export const postCreateParty = async (req, res) => {
       hashtags: Party.formatHashtags(hashtags),
     });
 
-    // 멤버에 변경하는 알고리즘
-    await Character.updateMany(
-      { _id: { $in: chars } },
-      {
-        $push: { parties: newParty._id },
-      }
-    );
+    // // 멤버에 변경하는 알고리즘
+    // await Character.updateMany(
+    //   { _id: { $in: chars } },
+    //   {
+    //     $push: { parties: newParty._id },
+    //   }
+    // );
+
+    // // 캐릭터 목록에 있는 user id들 가져오기
+    // const owners = await Character.find(
+    //   { _id: { $in: chars } },
+    //   { _id: false, owner: true }
+    // );
+
+    // // 멤버에 변경하는 알고리즘
+    // await User.updateMany(
+    //   { _id: { $in: owners } },
+    //   {
+    //     $push: { parties: newParty._id },
+    //   }
+    // );
+    pushParties(newParty._id, chars);
 
     // 기존 파티에서 제거하는 알고리즘
     // 레이드 별로 나눌 지 고민 중
@@ -104,25 +122,25 @@ export const getWeekParty = async (req, res) => {
   try {
     const wedParty = await Party.find({ weekday: "수" })
       .sort({ startAt: "asc" })
-      .populate("members");
+      .populate("members", "name");
     const thuParty = await Party.find({ weekday: "목" })
       .sort({ startAt: "asc" })
-      .populate("members");
+      .populate("members", "name");
     const friParty = await Party.find({ weekday: "금" })
       .sort({ startAt: "asc" })
-      .populate("members");
+      .populate("members", "name");
     const satParty = await Party.find({ weekday: "토" })
       .sort({ startAt: "asc" })
-      .populate("members");
+      .populate("members", "name");
     const sunParty = await Party.find({ weekday: "일" })
       .sort({ startAt: "asc" })
-      .populate("members");
+      .populate("members", "name");
     const monParty = await Party.find({ weekday: "월" })
       .sort({ startAt: "asc" })
-      .populate("members");
+      .populate("members", "name");
     const tueParty = await Party.find({ weekday: "화" })
       .sort({ startAt: "asc" })
-      .populate("members");
+      .populate("members", "name");
     const parties = [
       wedParty,
       thuParty,
@@ -147,7 +165,7 @@ export const selectWeekParty = async (req, res) => {
   try {
     const parties = await Party.find({ weekday: keyword })
       .sort({ startAt: "asc" })
-      .populate("members");
+      .populate("members", "name");
 
     return res.render("week", { pageTitle: "Week", parties, week, keyword });
   } catch {
@@ -163,14 +181,31 @@ export const deleteParty = async (req, res) => {
 
   try {
     const selectedParty = await Party.findById(id);
-    await Character.updateMany(
-      {
-        _id: { $in: selectedParty.members },
-      },
-      {
-        $pull: { parties: selectedParty._id },
-      }
-    );
+    // await Character.updateMany(
+    //   {
+    //     _id: { $in: selectedParty.members },
+    //   },
+    //   {
+    //     $pull: { parties: selectedParty._id },
+    //   }
+    // );
+
+    // await User.updateMany(
+    //   {
+    //     _id: selectedParty.owner,
+    //   },
+    //   {
+    //     $pull: { parties: selectedParty._id },
+    //   }
+    // );
+
+    pullParties(selectedParty._id, selectedParty.members);
+
+    // 해당 파티의 댓글들도 전부 삭제
+    const comments = await Comment.find({ party: selectedParty._id });
+    comments.forEach((elem) => {
+      deleteCommentOnce(elem);
+    });
 
     await Party.findByIdAndDelete(id);
 
@@ -211,15 +246,29 @@ export const postEditParty = async (req, res) => {
   } = req;
 
   try {
+    pullParties(id, existing);
     // 기존 멤버들에서 id 제거
-    await Character.updateMany(
-      {
-        _id: { $in: existing },
-      },
-      {
-        $pull: { parties: id },
-      }
-    );
+    // await Character.updateMany(
+    //   {
+    //     _id: { $in: existing },
+    //   },
+    //   {
+    //     $pull: { parties: id },
+    //   }
+    // );
+
+    // const existOwners = await Character.find(
+    //   { _id: { $in: existing } },
+    //   { _id: false, owner: true }
+    // );
+
+    // // 멤버에 변경하는 알고리즘
+    // await User.updateMany(
+    //   { _id: { $in: existOwners } },
+    //   {
+    //     $pull: { parties: id },
+    //   }
+    // );
 
     const week = convertNumToWeek(weekday);
     await Party.findByIdAndUpdate(id, {
@@ -230,11 +279,27 @@ export const postEditParty = async (req, res) => {
       hashtags: Party.formatHashtags(hashtags),
     });
 
-    // 멤버에 변경하는 알고리즘
-    await Character.updateMany(
-      { _id: { $in: chars } },
-      { $push: { parties: id } }
-    );
+    // // 멤버에 변경하는 알고리즘
+    // await Character.updateMany(
+    //   { _id: { $in: chars } },
+    //   { $push: { parties: id } }
+    // );
+
+    // // 캐릭터 목록에 있는 user id들 가져오기
+    // const owners = await Character.find(
+    //   { _id: { $in: chars } },
+    //   { _id: false, owner: true }
+    // );
+
+    // // 멤버에 변경하는 알고리즘
+    // await User.updateMany(
+    //   { _id: { $in: owners } },
+    //   {
+    //     $push: { parties: newParty._id },
+    //   }
+    // );
+
+    pushParties(id, chars);
 
     // 레이드 별로 나눌 지 고민 중
   } catch (error) {
@@ -290,19 +355,21 @@ export const getDeleteComment = async (req, res) => {
 
   try {
     const comment = await Comment.findById(id);
-    const user = await User.findById(comment.owner);
-    const party = await Party.findById(comment.party);
+    // const user = await User.findById(comment.owner);
+    // const party = await Party.findById(comment.party);
 
     if (!comment) {
       return res.status(400).render("404", { pageTitle: "Comment not found." });
     }
 
-    await Comment.findByIdAndDelete(id);
-    user.comments.splice(user.comments.indexOf(id), 1);
-    user.save();
+    // await Comment.findByIdAndDelete(id);
+    // user.comments.splice(user.comments.indexOf(id), 1);
+    // user.save();
 
-    party.comments.splice(party.comments.indexOf(id), 1);
-    party.save();
+    // party.comments.splice(party.comments.indexOf(id), 1);
+    // party.save();
+
+    deleteCommentOnce(comment);
 
     req.flash("success", "댓글 삭제됨");
     return res.redirect(`/party/${party._id}`);
@@ -310,6 +377,18 @@ export const getDeleteComment = async (req, res) => {
     req.flash("error", "댓글 삭제 실패");
     res.redirect("/");
   }
+};
+
+const deleteCommentOnce = async (comment) => {
+  const user = await User.findById(comment.owner);
+  const party = await Party.findById(comment.party);
+
+  await Comment.findByIdAndDelete(comment._id);
+  user.comments.splice(user.comments.indexOf(comment._id), 1);
+  user.save();
+
+  party.comments.splice(party.comments.indexOf(comment._id), 1);
+  party.save();
 };
 
 /**
@@ -340,4 +419,59 @@ const convertWeekToNum = (weeknum) => {
     case "화":
       return "6";
   }
+};
+
+const pushParties = async (partyId, charList) => {
+  // 멤버에 변경하는 알고리즘
+  await Character.updateMany(
+    { _id: { $in: charList } },
+    { $push: { parties: partyId } }
+  );
+
+  // 캐릭터 목록에 있는 user id들 가져오기
+  const owners = await Character.find(
+    { _id: { $in: charList } },
+    { _id: false, owner: true }
+  );
+  let ownerIds = [];
+  owners.forEach((elem) => {
+    ownerIds.push(elem.owner);
+  });
+
+  // 멤버에 변경하는 알고리즘
+  await User.updateMany(
+    { _id: { $in: ownerIds } },
+    {
+      $push: { parties: partyId },
+    }
+  );
+};
+
+const pullParties = async (partyId, existing) => {
+  await Character.updateMany(
+    {
+      _id: { $in: existing },
+    },
+    {
+      $pull: { parties: partyId },
+    }
+  );
+
+  const owners = await Character.find(
+    { _id: { $in: existing } },
+    { _id: false, owner: true }
+  );
+
+  const ownerIds = [];
+  owners.forEach((elem) => {
+    ownerIds.push(elem.owner);
+  });
+
+  // 멤버에 변경하는 알고리즘
+  await User.updateMany(
+    { _id: { $in: ownerIds } },
+    {
+      $pull: { parties: partyId },
+    }
+  );
 };

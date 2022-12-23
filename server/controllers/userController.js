@@ -21,14 +21,20 @@ export const getUserInfo = async (req, res) => {
   const {
     params: { id },
   } = req;
+  const week = ["수", "목", "금", "토", "일", "월", "화"];
   try {
     const user = await User.findById(id)
       .populate("characters", "name")
       .populate({
         path: "comments",
         populate: { path: "party", select: "title" },
+      })
+      .populate({
+        path: "parties",
+        select: ["title", "weekday", "startAt"],
+        options: { sort: { startAt: "asc" } },
       });
-    return res.render("userInfo", { pageTitle: "User", user });
+    return res.render("userInfo", { pageTitle: "User", user, week });
   } catch {
     req.flash("error", "잘못된 유저ID");
     res.redirect("/");
@@ -41,10 +47,10 @@ export const getEditUser = async (req, res) => {
   } = req;
 
   try {
-    const user = await User.findById(id).populate("characters");
+    const user = await User.findById(id);
     const chars = await Character.find({})
       .sort({ owner: "asc" })
-      .populate("owner");
+      .populate("owner", "name");
     return res.render("createUser", { pageTitle: "Edit User", chars, user });
   } catch {
     req.flash("error", "잘못된 유저ID");
@@ -71,14 +77,20 @@ export const postEditUser = async (req, res) => {
     /**owner가 이미 있는 캐릭터의 경우 */
     const selectedChars = await Character.find({ _id: { $in: chars } });
     const oldOwnerIds = [];
+    const partyIds = [];
+
     selectedChars.map((elem) => {
       oldOwnerIds.push(elem.owner);
+      elem.parties.map((party) => {
+        partyIds.push(party);
+      });
     });
+    console.log(partyIds);
 
     await User.updateMany(
       { _id: { $in: oldOwnerIds } },
       {
-        $pull: { characters: { $in: chars } },
+        $pull: { characters: { $in: chars }, parties: { $in: partyIds } },
       }
     );
 
@@ -93,7 +105,8 @@ export const postEditUser = async (req, res) => {
 
     await User.findByIdAndUpdate(id, {
       name,
-      characters: chars,
+      characters: chars === undefined ? [] : chars,
+      parties: partyIds,
     });
 
     return res.redirect(`/user/${id}`);
@@ -108,7 +121,7 @@ export const getCreateUser = async (req, res) => {
     // 캐릭터 소유주가 없는 캐릭터만 목록 불러오기
     const chars = await Character.find({})
       .sort({ owner: "asc" })
-      .populate("owner");
+      .populate("owner", "name");
     return res.render("createUser", { pageTitle: "Create User", chars });
   } catch {
     req.flash("error", "캐릭터 목록 조회 실패");
@@ -133,14 +146,19 @@ export const postCreateUser = async (req, res) => {
     /**owner가 이미 있는 캐릭터의 경우 */
     const selectedChars = await Character.find({ _id: { $in: chars } });
     const oldOwnerIds = [];
+    const partyIds = [];
+
     selectedChars.map((elem) => {
       oldOwnerIds.push(elem.owner);
+      elem.parties.map((party) => {
+        partyIds.push(party);
+      });
     });
 
     await User.updateMany(
       { _id: { $in: oldOwnerIds } },
       {
-        $pull: { characters: { $in: chars } },
+        $pull: { characters: { $in: chars }, parties: { $in: partyIds } },
       }
     );
 
@@ -149,6 +167,7 @@ export const postCreateUser = async (req, res) => {
       newUser = await User.create({
         name,
         characters: chars,
+        parties: partyIds,
       });
 
       req.flash("success", `${name} 생성됨`);
@@ -157,6 +176,7 @@ export const postCreateUser = async (req, res) => {
       newUser = await User.findByIdAndUpdate(isExists._id, {
         name,
         characters: chars,
+        parties: partyIds,
       });
       req.flash("info", `${name} 변경됨`);
     }

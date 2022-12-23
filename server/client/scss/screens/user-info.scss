@@ -7,12 +7,70 @@
       text-align: center;
     }
   }
+  .user-schedule__title {
+    font-family: "Jua", sans-serif;
+    font-size: 2rem;
+    margin: 25px 0 10px 0;
+  }
+  .user-schedules::-webkit-scrollbar {
+    display: none;
+  }
+  .user-schedules {
+    font-size: $rem15;
+    display: flex;
+    overflow-x: scroll;
+    margin-bottom: 20px;
+    li {
+      padding: 5px;
+      margin-right: 5px;
+      border: 1px solid $gray6;
+      border-radius: 10px;
+      .schedule {
+        width: 60px;
+        .schedule-info {
+          display: flex;
+          flex-direction: column;
+        }
+        .schedule-title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          span {
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+
+    #weekday0 {
+      order: 0;
+    }
+    #weekday1 {
+      order: 1;
+    }
+    #weekday2 {
+      order: 2;
+    }
+    #weekday3 {
+      order: 3;
+    }
+    #weekday4 {
+      order: 4;
+    }
+    #weekday5 {
+      order: 5;
+    }
+    #weekday6 {
+      order: 6;
+    }
+  }
   #commentContainer {
+    margin-top: 30px;
+    max-width: 600px;
     .comment {
       padding: 10px 20px;
       border: 1px solid $gray6;
       border-radius: 10px;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
       .comment-mixin__container {
         margin: $rem05 0 $rem10 0;
       }
