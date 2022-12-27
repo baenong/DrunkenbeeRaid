@@ -1,0 +1,32 @@
+extends base.pug
+
+block content
+    .list-header 
+        .screen-title 
+            span Patch Note
+    ul#patchContainer
+        li
+            span.patch-date - 2022. 12. 22.
+            ul.patch-list
+                li 최초배포
+        li
+            span.patch-date - 2022. 12. 23.
+            ul.patch-list
+                li 유저 정보에서 해당 유저의 주간 소속 파티 조회 기능 추가
+                li 해당 유저의 댓글 모아볼 수 있는 기능 추가
+                li 조회 쿼리 최적화
+                li 댓글 생성 시간 월이 한달 전으로 나오는 문제 수정
+                li 요일별 조회 기능에서 시간 역순으로 조회되던 문제 수정
+                li 유저가 지정되지 않은 캐릭터 정보 화면 오류 수정
+                li 파티 삭제 시 코멘트가 남아있던 현상 수정
+                li 유저의 마지막 캐릭터가 해제되지 않던 현상 수정
+        li
+            span.patch-date - 2022. 12. 26.
+            ul.patch-list
+                li 폰트 수정 : Nanum Gothic ▶ Noto Sans KR
+                li 유저 생성할 때 기존 유저이름과 동일한 경우 생성 못하도록 수정
+        li 
+            span.patch-date - 2022. 12. 27.
+            ul.patch-list
+                li UI 수정(헤더, 파티 제목)
+                li 캐릭터 목록에서 이름 검색할 수 있도록 기능 추가
