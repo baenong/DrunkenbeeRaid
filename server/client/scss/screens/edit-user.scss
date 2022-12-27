@@ -1,14 +1,15 @@
 #userForm {
   display: flex;
   flex-direction: column;
-  .user-title {
+  .user-title,
+  .user-password {
     margin-bottom: $rem15;
     label {
       font-size: 1.8rem;
       font-weight: 700;
     }
   }
-  div.user-title + span {
+  div.user-password + span {
     font-size: 1.8rem;
     font-weight: 700;
     padding: $rem10 0;

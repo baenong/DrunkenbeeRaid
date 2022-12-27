@@ -10,9 +10,15 @@ block content
         div.user-title
             label(for="name") 유저이름 : 
             if user 
-                input(type="text" name="name" value=`${user.name}` readonly).form-title
+                input(type="text" name="name" value=`${user.name}` required).form-title
             else 
-                input(type="text" name="name").form-title
+                input(type="text" name="name" required).form-title
+        .user-password
+            label(for="password") 패스워드 : 
+            if user
+                input(type="password" name="password" value=`${user.password}` required).form-title
+            else 
+                input(type="password" name="password" required).form-title
         span 캐릭터 목록
         ul.char-list
             each char in chars 

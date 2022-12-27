@@ -1,5 +1,39 @@
 import User from "../models/User.js";
 import Character from "../models/Character.js";
+import bcrypt from "bcrypt";
+
+export const getLogin = async (req, res) => {
+  res.render("login", { pageTitle: "Login" });
+};
+
+export const postLogin = async (req, res) => {
+  const { name, password } = req.body;
+
+  // Check User exist
+  const user = await User.findOne({ name });
+  if (!user) {
+    req.flash("error", "해당 유저가 없습니다");
+    return res.status(400).render("login", { pageTitle: "Login" });
+  }
+
+  // Check password valid
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) {
+    req.flash("error", "잘못된 비밀번호");
+    return res.status(400).render("login", { pageTitle: "Login" });
+  }
+
+  req.session.loggedIn = true;
+  req.session.user = user;
+
+  return res.redirect("/");
+};
+
+export const logout = (req, res) => {
+  req.flash("info", "로그아웃");
+  req.session.destroy();
+  return res.redirect("/");
+};
 
 export const getUserList = async (req, res) => {
   //db.collection.find('name': { $exists: false }) : 값이 없는 컬럼만 불러오기
@@ -125,7 +159,7 @@ export const getCreateUser = async (req, res) => {
 
 export const postCreateUser = async (req, res) => {
   const {
-    body: { name, chars },
+    body: { name, chars, password },
   } = req;
 
   try {
@@ -135,8 +169,11 @@ export const postCreateUser = async (req, res) => {
     }
 
     const isExists = await User.findOne({ name });
-    let newUser;
-
+    if (isExists) {
+      // Update!
+      req.flash("error", `이미 있는 유저입니다`);
+      return res.status(404).redirect("/user/create");
+    }
     /**owner가 이미 있는 캐릭터의 경우 */
     const selectedChars = await Character.find({ _id: { $in: chars } });
     const oldOwnerIds = [];
@@ -156,24 +193,15 @@ export const postCreateUser = async (req, res) => {
       }
     );
 
-    if (!isExists) {
-      // 신규 생성
-      newUser = await User.create({
-        name,
-        characters: chars,
-        parties: partyIds,
-      });
+    // 신규 생성
+    const newUser = await User.create({
+      name,
+      characters: chars,
+      parties: partyIds,
+      password,
+    });
 
-      req.flash("success", `${name} 생성됨`);
-    } else {
-      // Update!
-      newUser = await User.findByIdAndUpdate(isExists._id, {
-        name,
-        characters: chars,
-        parties: partyIds,
-      });
-      req.flash("info", `${name} 변경됨`);
-    }
+    req.flash("success", `${name} 생성됨`);
 
     // character update
     await Character.updateMany(

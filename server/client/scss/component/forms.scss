@@ -17,6 +17,7 @@ input[type="checkbox"]:checked + label {
   font-weight: 700;
 }
 
+input[type="password"],
 input[type="text"],
 textarea {
   all: unset;

@@ -6,7 +6,9 @@ block content
         .list-header
             .screen-title 
                 span #{user.name}
-            a(href=`/user/${user._id}/edit`).edit-button.red edit
+            if loggedIn
+                if String(user._id) === String(loggedInUser._id)
+                    a(href=`/user/${user._id}/edit`).edit-button.red edit
         ul.char-list
             each char in user.characters 
                 li 

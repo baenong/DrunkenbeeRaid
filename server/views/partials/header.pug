@@ -9,6 +9,15 @@ header
                 form(action="/search" method="GET").search__form
                     input(placeholder="Search" type="text", name="keyword")
             li.right-menu
-                a(href="/user") 유저목록
+                a(href="/user") 유저
             li.right-menu
-                a(href="/character") 캐릭목록
+                a(href="/character") 캐릭
+            if loggedIn
+                li.right-menu
+                    a(href=`/user/${loggedInUser._id}`)
+                        span #{loggedInUser.name}
+                li.right-menu
+                    a(href="/logout") 로그아웃
+            else
+                li.right-menu 
+                    a(href="/login") 로그인

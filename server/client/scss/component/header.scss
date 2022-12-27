@@ -8,7 +8,8 @@ header {
     font-size: 1.8rem;
     ul {
       display: flex;
-      width: 100vw;
+      width: calc(100vw - 2rem);
+      padding: 0 $rem10;
       li {
         display: flex;
         justify-content: center;
@@ -19,10 +20,7 @@ header {
           text-align: center;
         }
       }
-      li:first-child {
-        margin-left: $rem15;
-        margin-right: $rem10;
-      }
+
       li:not(:nth-child(3)):hover,
       .search__form > input {
         background-color: $bg;
@@ -31,16 +29,13 @@ header {
       li:nth-child(3) {
         flex-grow: 1;
       }
-      li:last-child {
-        margin-left: $rem10;
-        margin-right: $rem15;
-      }
+
       .search__form {
         width: 100%;
         display: flex;
         align-items: center;
         input {
-          width: 95%;
+          width: 100%;
           padding: $rem05;
           border: 1px solid gray;
           border-radius: 5px;

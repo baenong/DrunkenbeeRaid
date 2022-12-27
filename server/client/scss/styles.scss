@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&family=Jua&family=Nanum+Gothic:wght@400;800&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&family=Jua&family=Noto+Sans+KR:wght@300;400;500;700&display=swap);
 
 @import "./config/reset.scss";
 @import "./config/variables.scss";
@@ -31,7 +31,7 @@ html {
 }
 
 body {
-  font-family: "Nanum-Gothic", sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   background-color: $bg;
   color: white;
 }

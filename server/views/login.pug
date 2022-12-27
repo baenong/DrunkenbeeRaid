@@ -1,0 +1,16 @@
+extends base.pug
+
+block content
+    .list-header
+        .screen-title 
+            span 로그인
+    form(method="POST")#charForm
+        .char-info
+            .char-label
+                label(for="name") 유저명 : 
+                label(for="password") 패스워드 : 
+            .char-input
+                input(type="text" name="name" id="name" placeholder="User").form-title
+                input(type="password" name="password" id="password" placeholder="Password").form-title
+        input(type="submit" value="로그인").edit-button.blue
+        a(href="/user/create" type="button").edit-button.red 만들기
