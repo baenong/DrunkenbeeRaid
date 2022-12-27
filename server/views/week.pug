@@ -2,7 +2,10 @@ extends base.pug
 include mixins/week-party
 
 block content
-    div.btn-week 
+    .list-header
+        .screen-title
+            span 요일별 파티 목록
+    .btn-week 
         a(href="/week").edit-button.blue 전체
         each num in [0,1,2,3,4,5,6]
             if keyword === week[num]

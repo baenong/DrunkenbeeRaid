@@ -11,7 +11,7 @@
     font-family: "Jua", sans-serif;
     font-size: 2rem;
     border-bottom: 1px solid whitesmoke;
-    margin: 25px 0 10px 0;
+    margin: 15px 0;
   }
   .user-schedules::-webkit-scrollbar {
     display: none;
@@ -74,13 +74,10 @@
     margin-top: 30px;
     max-width: 600px;
     .comment {
-      padding: 10px 20px;
+      padding: 10px 15px;
       border: 1px solid $gray6;
-      border-radius: 10px;
+      border-radius: 15px;
       margin-bottom: 10px;
-      .comment-mixin__container {
-        margin: $rem05 0 $rem10 0;
-      }
     }
   }
 }

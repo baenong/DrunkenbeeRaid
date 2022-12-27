@@ -7,24 +7,24 @@ block content
         .screen-title 
             span #{user ? "유저정보 수정" : "유저 만들기"}
     form(method="POST")#userForm
-        div.user-title
-            label(for="name") 유저이름 : 
+        .user-title
             if user 
-                input(type="text" name="name" value=`${user.name}` required).form-title
+                input(type="text" name="name" value=`${user.name}` placeholder="유저이름 입력" required).form-title
             else 
-                input(type="text" name="name" required).form-title
-        .user-password
-            label(for="password") 패스워드 : 
-            if user
-                input(type="password" name="password" value=`${user.password}` required).form-title
-            else 
-                input(type="password" name="password" required).form-title
-        span 캐릭터 목록
+                input(type="text" name="name" placeholder="유저이름 입력" required).form-title
+        //- .user-password
+        //-     label(for="password") 패스워드 : 
+        //-     if user
+        //-         input(type="password" name="password" value=`${user.password}` required).form-title
+        //-     else 
+        //-         input(type="password" name="password" required).form-title
+        input(type="search" placeholder="캐릭명 검색").char-search
+        span.char-list__title 캐릭터 목록
         ul.char-list
             each char in chars 
                 if char.owner
                     li
-                        div.owner-exists
+                        .owner-exists
                             if user && (String(char.owner._id) === String(user._id))
                                 input(type="checkbox" name="chars" id=`${char._id}` value=`${char._id}` checked)
                             else
@@ -33,8 +33,11 @@ block content
                         
                 else
                     li
-                        div.owner-none
+                        .owner-none
                             +char-select(char)
             else 
                 span.empty__message 캐릭터가 없습니다.
         input(type="submit" name="submit" value="확인").edit-button.blue
+
+block scripts
+    script(src="/static/js/searchChar.js") 

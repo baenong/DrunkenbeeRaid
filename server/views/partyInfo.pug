@@ -8,8 +8,8 @@ block content
         div.party-info__meta
             span #{party.weekday}
             span #{party.startAt}
-        if loggedIn
-            a(href=`/party/${party._id}/edit`).edit-button.red edit
+        //- if loggedIn
+        a(href=`/party/${party._id}/edit`).edit-button.red edit
         ul.hashtags
             each hashtag in party.hashtags
                 li.hashtag
@@ -19,19 +19,19 @@ block content
             each member in party.members
                 li.party-info__member
                     span #{member.name}
-    if loggedIn
-        div.party__comments
-            form.party__comments-form#commentForm
-                input(type="text" placeholder='User' value=`${loggedInUser.name}` readonly).comment-owner
-                textarea(rows='2', placeholder='Write a comment...').comment
-                button.edit-button.green Add Comment
+    //- if loggedIn
+    div.party__comments
+        form.party__comments-form#commentForm
+            //- input(type="text" placeholder='User' value=`${loggedInUser.name}` readonly).comment-owner
+            input(type="text" placeholder='User').comment-owner
+            textarea(rows='2', placeholder='Write a comment...').comment
+            button.edit-button.green Add Comment
     ul#commentContainer
         each comment in comments.reverse()
             li.comment 
                 +comment(comment)
         else 
             span.empty__message 댓글이 없습니다.
-    div#chatContainer.hidden
         
 block scripts 
     script(src="/static/js/commentSection.js")

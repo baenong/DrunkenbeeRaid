@@ -17,16 +17,24 @@ input[type="checkbox"]:checked + label {
   font-weight: 700;
 }
 
-input[type="password"],
+// input[type="password"],
+.char-search,
 input[type="text"],
 textarea {
   all: unset;
   border: 1px $gray6 solid;
 }
 
+.char-search,
 input.form-title {
   font-size: 1.6rem;
   padding: 0.3rem;
   border: 0;
   border-bottom: 0.5px solid $gray6;
+  width: 200px;
+}
+
+.char-search {
+  text-align: center;
+  margin: 15px 0;
 }

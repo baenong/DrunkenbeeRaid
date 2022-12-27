@@ -1,39 +1,39 @@
 import User from "../models/User.js";
 import Character from "../models/Character.js";
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
 
-export const getLogin = async (req, res) => {
-  res.render("login", { pageTitle: "Login" });
-};
+// export const getLogin = async (req, res) => {
+//   res.render("login", { pageTitle: "Login" });
+// };
 
-export const postLogin = async (req, res) => {
-  const { name, password } = req.body;
+// export const postLogin = async (req, res) => {
+//   const { name, password } = req.body;
 
-  // Check User exist
-  const user = await User.findOne({ name });
-  if (!user) {
-    req.flash("error", "해당 유저가 없습니다");
-    return res.status(400).render("login", { pageTitle: "Login" });
-  }
+//   // Check User exist
+//   const user = await User.findOne({ name });
+//   if (!user) {
+//     req.flash("error", "해당 유저가 없습니다");
+//     return res.status(400).render("login", { pageTitle: "Login" });
+//   }
 
-  // Check password valid
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) {
-    req.flash("error", "잘못된 비밀번호");
-    return res.status(400).render("login", { pageTitle: "Login" });
-  }
+//   // Check password valid
+//   const ok = await bcrypt.compare(password, user.password);
+//   if (!ok) {
+//     req.flash("error", "잘못된 비밀번호");
+//     return res.status(400).render("login", { pageTitle: "Login" });
+//   }
 
-  req.session.loggedIn = true;
-  req.session.user = user;
+//   req.session.loggedIn = true;
+//   req.session.user = user;
 
-  return res.redirect("/");
-};
+//   return res.redirect("/");
+// };
 
-export const logout = (req, res) => {
-  req.flash("info", "로그아웃");
-  req.session.destroy();
-  return res.redirect("/");
-};
+// export const logout = (req, res) => {
+//   req.flash("info", "로그아웃");
+//   req.session.destroy();
+//   return res.redirect("/");
+// };
 
 export const getUserList = async (req, res) => {
   //db.collection.find('name': { $exists: false }) : 값이 없는 컬럼만 불러오기

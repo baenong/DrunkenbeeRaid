@@ -3,21 +3,26 @@
   gap: $rem10;
   grid-template-columns: repeat(2, 1fr);
   margin-top: $rem15;
-  .user-mixin {
-    border: 1px solid $gray6;
-    margin-bottom: $rem05;
-    padding: $rem10;
-    border-radius: $rem10;
-    .user-mixin__title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: $rem10;
-    }
-    .user-mixin__char {
-      font-size: 1.6rem;
-      font-weight: 100;
-      li {
-        line-height: 1.8rem;
+  a {
+    display: flex;
+    justify-content: center;
+    .user-mixin {
+      border: 1px solid $gray6;
+      margin-bottom: $rem05;
+      padding: $rem10;
+      border-radius: $rem10;
+      width: 80%;
+      .user-mixin__title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: $rem10;
+      }
+      .user-mixin__char {
+        font-size: 1.6rem;
+        font-weight: 100;
+        li {
+          line-height: 1.8rem;
+        }
       }
     }
   }

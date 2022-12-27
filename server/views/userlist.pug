@@ -5,8 +5,8 @@ block content
     .list-header
         .screen-title 
             span 유저 목록
-        if !loggedIn
-            a(href="/user/create").edit-button.red create
+        //- if !loggedIn
+        a(href="/user/create").edit-button.red create
     ul.user-list 
         each user in users
             +usercard(user)

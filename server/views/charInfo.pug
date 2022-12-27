@@ -6,9 +6,10 @@ block content
         .list-header
             .screen-title
                 span #{char.name}
-        span #{char.classname}
-        if char.owner
-            span 유저 : #{char.owner.name}
+        .char-info__meta
+            span #{char.classname}
+            if char.owner
+                span 유저 : #{char.owner.name}
         a(href=`/character/${char._id}/edit`).edit-button.red edit
         ul.char-info__parties.party-grid
             each party in char.parties

@@ -5,9 +5,13 @@ block content
         div.screen-title
             span 캐릭터 목록
         a(href="/character/create").edit-button.red create
+        input(type="search" placeholder="캐릭명").char-search
     ul.char-list
         each char in chars
             li.char-mixin
                 a(href=`/character/${char._id}`) #{char.name}(#{char.classname})
         else 
             span.empty__message 캐릭터가 없습니다.
+
+block scripts
+    script(src="/static/js/searchChar.js") 

@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .screen-title {
@@ -26,4 +26,8 @@
 .empty__message {
   font-size: $rem15;
   font-weight: 300;
+}
+
+.hidden {
+  display: none;
 }

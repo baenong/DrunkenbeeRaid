@@ -7,21 +7,26 @@ import {
   getEditUser,
   postEditUser,
 } from "../controllers/userController.js";
-import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares.js";
+// import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares.js";
 
 const userRouter = express.Router();
 
 userRouter.get("/", getUserList);
-userRouter
+userRouter.route("/create").get(getCreateUser).post(postCreateUser);
+/** Login Version
+ * userRouter`
   .route("/create")
   .all(publicOnlyMiddleware)
   .get(getCreateUser)
   .post(postCreateUser);
+  */
 userRouter.get("/:id([0-9a-f]{24})", getUserInfo);
-userRouter
+userRouter.route("/:id([0-9a-f]{24})/edit").get(getEditUser).post(postEditUser);
+/** Login Version
+ * userRouter
   .route("/:id([0-9a-f]{24})/edit")
   .all(protectorMiddleware)
   .get(getEditUser)
-  .post(postEditUser);
+  .post(postEditUser);*/
 
 export default userRouter;

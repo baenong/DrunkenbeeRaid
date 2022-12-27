@@ -1,23 +1,23 @@
 header 
     nav 
         ul 
-            li.left-menu 
+            li 
                 a(href="/") 파티
-            li.left-menu
+            li
                 a(href="/week") 요일별
             li
                 form(action="/search" method="GET").search__form
                     input(placeholder="Search" type="text", name="keyword")
-            li.right-menu
+            li
                 a(href="/user") 유저
-            li.right-menu
+            li
                 a(href="/character") 캐릭
-            if loggedIn
+            //-if loggedIn
                 li.right-menu
                     a(href=`/user/${loggedInUser._id}`)
                         span #{loggedInUser.name}
                 li.right-menu
-                    a(href="/logout") 로그아웃
-            else
-                li.right-menu 
+                    a(href="/logout") X
+            //-else
+                li.right-menu
                     a(href="/login") 로그인

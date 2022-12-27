@@ -8,13 +8,19 @@
     margin-bottom: $rem15;
     padding-bottom: $rem05;
     border-bottom: 2px solid white;
+    display: flex;
+    justify-content: space-between;
     .party-mixin__title {
       font-size: 3.2rem;
       font-family: "Jua";
       margin-right: $rem10;
     }
-    .party-mixin__start {
-      margin-left: $rem05;
+    .party-mixin__time {
+      display: flex;
+      align-items: center;
+      .party-mixin__start {
+        margin-left: $rem05;
+      }
     }
   }
 

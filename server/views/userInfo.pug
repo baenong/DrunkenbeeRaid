@@ -6,9 +6,10 @@ block content
         .list-header
             .screen-title 
                 span #{user.name}
-            if loggedIn
-                if String(user._id) === String(loggedInUser._id)
-                    a(href=`/user/${user._id}/edit`).edit-button.red edit
+            //- if loggedIn
+            //-     if String(user._id) === String(loggedInUser._id)
+            a(href=`/user/${user._id}/edit`).edit-button.red edit
+        .user-schedule__title 캐릭터 목록
         ul.char-list
             each char in user.characters 
                 li 

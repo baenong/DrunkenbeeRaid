@@ -67,6 +67,7 @@ export const getCharInfo = async (req, res) => {
         "members",
         "weekday",
         "startAt",
+        "comments",
         "hashtags",
       ]);
 

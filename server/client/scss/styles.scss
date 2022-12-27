@@ -79,12 +79,9 @@ main {
     nav {
       font-size: 1.6rem;
       ul {
-        li.left-menu {
+        li {
           padding: 5px;
           white-space: nowrap;
-        }
-        li.right-menu {
-          width: 2.8rem;
         }
       }
     }

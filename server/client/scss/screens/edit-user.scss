@@ -1,18 +1,25 @@
 #userForm {
   display: flex;
   flex-direction: column;
-  .user-title,
-  .user-password {
+  align-items: center;
+  // .user-password,
+  .user-title {
     margin-bottom: $rem15;
-    label {
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-  }
-  div.user-password + span {
     font-size: 1.8rem;
     font-weight: 700;
-    padding: $rem10 0;
-    border-bottom: 0.5px solid $gray6;
+  }
+
+  .user-title {
+    text-align: center;
+  }
+
+  .char-list__title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    padding: $rem10;
+    margin: 10px 0 5px 0;
+  }
+  .char-list {
+    margin-bottom: 20px;
   }
 }

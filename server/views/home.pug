@@ -2,9 +2,11 @@ extends base.pug
 include mixins/party
 
 block content 
-    div.list-header
+    .list-header
+        .screen-title
+            span 파티 목록
         a(href="/party/create").edit-button.red create
-    div.party-grid 
+    .party-grid 
         each party in parties 
             +party(party)
         else 

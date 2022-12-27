@@ -8,6 +8,7 @@ module.exports = {
     main: BASE_JS + "main.js",
     commentSection: BASE_JS + "commentSection.js",
     editParty: BASE_JS + "editParty.js",
+    searchChar: BASE_JS + "searchChar.js",
   },
   plugins: [
     new MiniCssExtractPlugin({
