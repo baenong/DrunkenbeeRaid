@@ -1,13 +1,16 @@
-extends base.pug
-include mixins/comment
+extends ../base.pug
+include ../mixins/comment
 
 block content
     .user-info__container
         .list-header
             .screen-title 
                 span #{user.name}
-            //- if loggedIn
-            //-     if String(user._id) === String(loggedInUser._id)
+            .user-memo
+                if user.memo
+                    p #{user.memo}
+                else 
+                    span 메모가 없습니다.
             a(href=`/user/${user._id}/edit`).edit-button.red edit
         .user-schedule__title 캐릭터 목록
         ul.char-list

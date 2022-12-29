@@ -2,6 +2,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  .user-memo {
+    font-size: $rem15;
+    font-weight: 300;
+    p {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 1.8rem;
+    }
+  }
   .char-list {
     li {
       text-align: center;
@@ -11,7 +20,7 @@
     font-family: "Jua", sans-serif;
     font-size: 2rem;
     border-bottom: 1px solid whitesmoke;
-    margin: 15px 0;
+    margin: 10px 0;
   }
   .user-schedules::-webkit-scrollbar {
     display: none;
@@ -20,7 +29,7 @@
     font-size: $rem15;
     display: flex;
     overflow-x: scroll;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     li {
       padding: 5px;
       margin-right: 5px;
@@ -71,7 +80,6 @@
     }
   }
   #commentContainer {
-    margin-top: 30px;
     max-width: 600px;
     .comment {
       padding: 10px 15px;

@@ -1,14 +1,13 @@
-extends base.pug
-include mixins/comment
+extends ../base.pug
+include ../mixins/comment
 
 block content
-    div.party-info__container(data-id=party._id)
-        div.party-info__title.screen-title
+    .party-info__container(data-id=party._id)
+        .party-info__title.screen-title
             span #{party.title}
-        div.party-info__meta
+        .party-info__meta
             span #{party.weekday}
             span #{party.startAt}
-        //- if loggedIn
         a(href=`/party/${party._id}/edit`).edit-button.red edit
         ul.hashtags
             each hashtag in party.hashtags
@@ -19,10 +18,8 @@ block content
             each member in party.members
                 li.party-info__member
                     span #{member.name}
-    //- if loggedIn
-    div.party__comments
+    .party__comments
         form.party__comments-form#commentForm
-            //- input(type="text" placeholder='User' value=`${loggedInUser.name}` readonly).comment-owner
             input(type="text" placeholder='User').comment-owner
             textarea(rows='2', placeholder='Write a comment...').comment
             button.edit-button.green Add Comment

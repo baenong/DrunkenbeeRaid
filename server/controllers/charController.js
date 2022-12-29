@@ -3,7 +3,7 @@ import Character from "../models/Character.js";
 export const getCharList = async (req, res) => {
   try {
     const chars = await Character.find({});
-    return res.render("charList", { pageTitle: "Char", chars });
+    return res.render("char/listChar", { pageTitle: "Char", chars });
   } catch {
     req.flash("error", "에러 발생");
     return res.send("error");
@@ -11,7 +11,7 @@ export const getCharList = async (req, res) => {
 };
 
 export const getCreateChar = (req, res) => {
-  res.render("createChar", { pageTitle: "Create Char" });
+  res.render("char/editChar", { pageTitle: "Create Char" });
 };
 
 export const postCreateChar = async (req, res) => {
@@ -71,7 +71,7 @@ export const getCharInfo = async (req, res) => {
         "hashtags",
       ]);
 
-    res.render("charInfo", { pageTitle: "Char Info", char });
+    res.render("char/infoChar", { pageTitle: "Char Info", char });
   } catch {
     req.flash("error", "잘못된 캐릭터ID");
     res.redirect("/");
@@ -84,7 +84,7 @@ export const getEditChar = async (req, res) => {
   } = req;
   try {
     const char = await Character.findById(id);
-    res.render("createChar", { pageTitle: "Edit Char", char });
+    res.render("char/editChar", { pageTitle: "Edit Char", char });
   } catch {
     req.flash("error", "잘못된 캐릭터ID");
     res.redirect("/");

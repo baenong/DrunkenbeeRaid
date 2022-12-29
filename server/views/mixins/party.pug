@@ -1,11 +1,16 @@
 mixin party(party)
+    if (party.startAt < "10:00") && (party.weekday === "수")
+        div.party-mixin__reset
     div.party-mixin
         a(href=`/party/${party._id}`)
             .party-mixin__info
                 span.party-mixin__title #{party.title}(#{party.comments.length})
                 .party-mixin__time
-                    span.party-mixin__weekday #{party.weekday}요일
-                    span.party-mixin__start #{party.startAt}
+                    if (party.startAt < "10:00") && (party.weekday === "수")
+                        span.party-mixin__weekday 시간 미지정
+                    else
+                        span.party-mixin__weekday #{party.weekday}요일
+                        span.party-mixin__start #{party.startAt}
             span 파티원(#{party.members.length})
             ul.party-mixin__members
                 each member in party.members

@@ -1,5 +1,5 @@
-extends base.pug
-include mixins/char-select
+extends ../base.pug
+include ../mixins/char-select
 
 
 block content 
@@ -12,12 +12,9 @@ block content
                 input(type="text" name="name" value=`${user.name}` placeholder="유저이름 입력" required).form-title
             else 
                 input(type="text" name="name" placeholder="유저이름 입력" required).form-title
-        //- .user-password
-        //-     label(for="password") 패스워드 : 
-        //-     if user
-        //-         input(type="password" name="password" value=`${user.password}` required).form-title
-        //-     else 
-        //-         input(type="password" name="password" required).form-title
+        if user
+            .user-memo
+                textarea(rows='4' name="memo" placeholder='Write a memo...').memo #{user.memo ? user.memo : ""}
         input(type="search" placeholder="캐릭명 검색").char-search
         span.char-list__title 캐릭터 목록
         ul.char-list

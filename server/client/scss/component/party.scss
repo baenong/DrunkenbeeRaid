@@ -45,3 +45,14 @@
 .party-mixin:hover {
   border: 2px solid $link;
 }
+
+.party-mixin__reset {
+  display: none;
+}
+
+.party-mixin__reset + .party-mixin {
+  color: $gray2;
+  .party-hashtags {
+    color: rgba(60, 159, 245, 0.5);
+  }
+}

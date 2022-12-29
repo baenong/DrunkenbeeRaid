@@ -3,19 +3,15 @@ import {
   getDeleteComment,
   getWeekParty,
   home,
+  resetParties,
   search,
   selectWeekParty,
 } from "../controllers/partyController.js";
 import { getPatchNote } from "../controllers/patchController.js";
-// import { getLogin, logout, postLogin } from "../controllers/userController.js";
-// import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares.js";
 
 const rootRouter = express.Router();
 
 rootRouter.get("/", home);
-// rootRouter.route("/login").get(getLogin).post(postLogin);
-// rootRouter.get("/logout", logout);
-//rootRouter.get("/logout", protectorMiddleware, logout);
 rootRouter.get("/search", search);
 rootRouter.get("/week", getWeekParty);
 rootRouter.get("/week/search", selectWeekParty);

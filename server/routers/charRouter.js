@@ -6,7 +6,6 @@ import {
   getEditChar,
   postCreateChar,
 } from "../controllers/charController.js";
-// import { protectorMiddleware } from "../middlewares.js";
 
 const charRouter = express.Router();
 

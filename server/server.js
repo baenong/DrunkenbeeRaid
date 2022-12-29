@@ -7,7 +7,7 @@ import rootRouter from "./routers/rootRouter.js";
 import partyRouter from "./routers/partyRouter.js";
 import userRouter from "./routers/userRouter.js";
 import charRouter from "./routers/charRouter.js";
-// import { loginMiddleware } from "./middlewares.js";
+import resetCron from "./cron.js";
 
 const app = express();
 app.use(cors());
@@ -28,12 +28,14 @@ app.use(
 );
 
 app.use(expressFlash());
-// app.use(loginMiddleware);
 
 app.use("/static", express.static("assets"));
 app.use("/", rootRouter);
 app.use("/party", partyRouter);
 app.use("/user", userRouter);
 app.use("/character", charRouter);
+
+resetCron.start();
+console.log("Cron Start");
 
 export default app;

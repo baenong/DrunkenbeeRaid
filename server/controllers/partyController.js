@@ -52,11 +52,11 @@ export const showPartyInfo = async (req, res) => {
 
   try {
     const party = await Party.findById(id).populate("members", "name");
-    const comments = await Comment.find({ party: id }).populate(
-      "owner",
-      "name"
-    );
-    res.render("partyInfo", { pageTitle: "Party Info", party, comments });
+    const comments = await Comment.find(
+      { party: id },
+      { party: false }
+    ).populate("owner", "name");
+    res.render("party/infoParty", { pageTitle: "Party Info", party, comments });
   } catch {
     req.flash("error", "잘못된 파티ID");
     res.redirect("/");
@@ -64,8 +64,8 @@ export const showPartyInfo = async (req, res) => {
 };
 
 export const getCreateParty = async (req, res) => {
-  const freeChars = await Character.find({});
-  res.render("createParty", { pageTitle: "Create Party", freeChars });
+  const freeChars = await Character.find({}, { name: true, parties: true });
+  res.render("party/editParty", { pageTitle: "Create Party", freeChars });
 };
 
 export const postCreateParty = async (req, res) => {
@@ -83,31 +83,7 @@ export const postCreateParty = async (req, res) => {
       hashtags: Party.formatHashtags(hashtags),
     });
 
-    // // 멤버에 변경하는 알고리즘
-    // await Character.updateMany(
-    //   { _id: { $in: chars } },
-    //   {
-    //     $push: { parties: newParty._id },
-    //   }
-    // );
-
-    // // 캐릭터 목록에 있는 user id들 가져오기
-    // const owners = await Character.find(
-    //   { _id: { $in: chars } },
-    //   { _id: false, owner: true }
-    // );
-
-    // // 멤버에 변경하는 알고리즘
-    // await User.updateMany(
-    //   { _id: { $in: owners } },
-    //   {
-    //     $push: { parties: newParty._id },
-    //   }
-    // );
     pushParties(newParty._id, chars);
-
-    // 기존 파티에서 제거하는 알고리즘
-    // 레이드 별로 나눌 지 고민 중
   } catch (error) {
     req.flash("error", "에러 발생");
   }
@@ -117,25 +93,46 @@ export const postCreateParty = async (req, res) => {
 
 export const getWeekParty = async (req, res) => {
   try {
-    const wedParty = await Party.find({ weekday: "수" })
+    const wedParty = await Party.find(
+      { weekday: "수" },
+      { title: true, startAt: true, members: true }
+    )
       .sort({ startAt: "asc" })
       .populate("members", "name");
-    const thuParty = await Party.find({ weekday: "목" })
+    const thuParty = await Party.find(
+      { weekday: "목" },
+      { title: true, startAt: true, members: true }
+    )
       .sort({ startAt: "asc" })
       .populate("members", "name");
-    const friParty = await Party.find({ weekday: "금" })
+    const friParty = await Party.find(
+      { weekday: "금" },
+      { title: true, startAt: true, members: true }
+    )
       .sort({ startAt: "asc" })
       .populate("members", "name");
-    const satParty = await Party.find({ weekday: "토" })
+    const satParty = await Party.find(
+      { weekday: "토" },
+      { title: true, startAt: true, members: true }
+    )
       .sort({ startAt: "asc" })
       .populate("members", "name");
-    const sunParty = await Party.find({ weekday: "일" })
+    const sunParty = await Party.find(
+      { weekday: "일" },
+      { title: true, startAt: true, members: true }
+    )
       .sort({ startAt: "asc" })
       .populate("members", "name");
-    const monParty = await Party.find({ weekday: "월" })
+    const monParty = await Party.find(
+      { weekday: "월" },
+      { title: true, startAt: true, members: true }
+    )
       .sort({ startAt: "asc" })
       .populate("members", "name");
-    const tueParty = await Party.find({ weekday: "화" })
+    const tueParty = await Party.find(
+      { weekday: "화" },
+      { title: true, startAt: true, members: true }
+    )
       .sort({ startAt: "asc" })
       .populate("members", "name");
     const parties = [
@@ -147,7 +144,7 @@ export const getWeekParty = async (req, res) => {
       monParty,
       tueParty,
     ];
-    return res.render("week", { pageTitle: "Week", parties, week });
+    return res.render("party/weekParty", { pageTitle: "Week", parties, week });
   } catch {
     req.flash("error", "파티 조회 실패");
     res.redirect("/");
@@ -160,11 +157,19 @@ export const selectWeekParty = async (req, res) => {
   } = req;
 
   try {
-    const parties = await Party.find({ weekday: keyword })
+    const parties = await Party.find(
+      { weekday: keyword },
+      { title: true, startAt: true, members: true }
+    )
       .sort({ startAt: "asc" })
       .populate("members", "name");
 
-    return res.render("week", { pageTitle: "Week", parties, week, keyword });
+    return res.render("party/weekParty", {
+      pageTitle: "Week",
+      parties,
+      week,
+      keyword,
+    });
   } catch {
     req.flash("error", "파티 조회 실패");
     res.redirect("/");
@@ -177,29 +182,14 @@ export const deleteParty = async (req, res) => {
   } = req;
 
   try {
-    const selectedParty = await Party.findById(id);
-    // await Character.updateMany(
-    //   {
-    //     _id: { $in: selectedParty.members },
-    //   },
-    //   {
-    //     $pull: { parties: selectedParty._id },
-    //   }
-    // );
+    const selectedParty = await Party.findById(id, { members: true });
 
-    // await User.updateMany(
-    //   {
-    //     _id: selectedParty.owner,
-    //   },
-    //   {
-    //     $pull: { parties: selectedParty._id },
-    //   }
-    // );
+    pullParties(id, selectedParty.members);
 
-    pullParties(selectedParty._id, selectedParty.members);
-
-    // 해당 파티의 댓글들도 전부 삭제
-    const comments = await Comment.find({ party: selectedParty._id });
+    const comments = await Comment.find(
+      { party: id },
+      { createdAt: false, text: false }
+    );
     comments.forEach(async (elem) => {
       await deleteCommentOnce(elem);
     });
@@ -219,12 +209,17 @@ export const getEditParty = async (req, res) => {
   } = req;
 
   try {
-    const selectedParty = await Party.findById(id).populate("members");
+    const selectedParty = await Party.findById(id, {
+      comments: false,
+    }).populate("members");
     const members = selectedParty.members;
-    const freeChars = await Character.find({ _id: { $not: { $in: members } } });
+    const freeChars = await Character.find(
+      { _id: { $not: { $in: members } } },
+      { name: 1, parties: 1 }
+    );
 
     selectedParty.weekday = convertWeekToNum(selectedParty.weekday);
-    return res.render("createParty", {
+    return res.render("party/editParty", {
       pageTitle: "Create Party",
       freeChars,
       members,
@@ -244,28 +239,6 @@ export const postEditParty = async (req, res) => {
 
   try {
     pullParties(id, existing);
-    // 기존 멤버들에서 id 제거
-    // await Character.updateMany(
-    //   {
-    //     _id: { $in: existing },
-    //   },
-    //   {
-    //     $pull: { parties: id },
-    //   }
-    // );
-
-    // const existOwners = await Character.find(
-    //   { _id: { $in: existing } },
-    //   { _id: false, owner: true }
-    // );
-
-    // // 멤버에 변경하는 알고리즘
-    // await User.updateMany(
-    //   { _id: { $in: existOwners } },
-    //   {
-    //     $pull: { parties: id },
-    //   }
-    // );
 
     const week = convertNumToWeek(weekday);
     await Party.findByIdAndUpdate(id, {
@@ -276,29 +249,7 @@ export const postEditParty = async (req, res) => {
       hashtags: Party.formatHashtags(hashtags),
     });
 
-    // // 멤버에 변경하는 알고리즘
-    // await Character.updateMany(
-    //   { _id: { $in: chars } },
-    //   { $push: { parties: id } }
-    // );
-
-    // // 캐릭터 목록에 있는 user id들 가져오기
-    // const owners = await Character.find(
-    //   { _id: { $in: chars } },
-    //   { _id: false, owner: true }
-    // );
-
-    // // 멤버에 변경하는 알고리즘
-    // await User.updateMany(
-    //   { _id: { $in: owners } },
-    //   {
-    //     $push: { parties: newParty._id },
-    //   }
-    // );
-
     pushParties(id, chars);
-
-    // 레이드 별로 나눌 지 고민 중
   } catch (error) {
     req.flash("error", "에러 발생");
     return res.redirect("/");
@@ -314,7 +265,7 @@ export const postEditComment = async (req, res) => {
   } = req;
 
   try {
-    const owner = await User.findOne({ name: commenter });
+    const owner = await User.findOne({ name: commenter }, { name: 1 });
 
     if (!owner) {
       req.flash("error", "유저이름이 적절치 않음");
@@ -350,7 +301,10 @@ export const getDeleteComment = async (req, res) => {
   } = req;
 
   try {
-    const comment = await Comment.findById(id);
+    const comment = await Comment.findById(id, {
+      createdAt: false,
+      text: false,
+    });
 
     if (!comment) {
       return res.status(400).render("404", { pageTitle: "Comment not found." });
@@ -402,13 +356,11 @@ const convertWeekToNum = (weeknum) => {
 };
 
 const pushParties = async (partyId, charList) => {
-  // 멤버에 변경하는 알고리즘
   await Character.updateMany(
     { _id: { $in: charList } },
     { $push: { parties: partyId } }
   );
 
-  // 캐릭터 목록에 있는 user id들 가져오기
   const owners = await Character.find(
     { _id: { $in: charList } },
     { _id: false, owner: true }
@@ -418,7 +370,6 @@ const pushParties = async (partyId, charList) => {
     ownerIds.push(elem.owner);
   });
 
-  // 멤버에 변경하는 알고리즘
   await User.updateMany(
     { _id: { $in: ownerIds } },
     {
@@ -447,7 +398,6 @@ const pullParties = async (partyId, existing) => {
     ownerIds.push(elem.owner);
   });
 
-  // 멤버에 변경하는 알고리즘
   await User.updateMany(
     { _id: { $in: ownerIds } },
     {

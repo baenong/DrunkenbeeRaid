@@ -12,12 +12,3 @@ header
                 a(href="/user") 유저
             li
                 a(href="/character") 캐릭
-            //-if loggedIn
-                li.right-menu
-                    a(href=`/user/${loggedInUser._id}`)
-                        span #{loggedInUser.name}
-                li.right-menu
-                    a(href="/logout") X
-            //-else
-                li.right-menu
-                    a(href="/login") 로그인
