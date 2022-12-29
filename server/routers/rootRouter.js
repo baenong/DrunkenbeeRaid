@@ -3,7 +3,6 @@ import {
   getDeleteComment,
   getWeekParty,
   home,
-  resetParties,
   search,
   selectWeekParty,
 } from "../controllers/partyController.js";

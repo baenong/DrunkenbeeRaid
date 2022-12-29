@@ -59,7 +59,7 @@ const addComment = (text, name, createdAt, id) => {
   partyComments.prepend(newComment);
 };
 
-const handleSubmit = async (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const commentOwner = document.querySelector(".comment-owner");
   const text = textarea.value;
@@ -81,6 +81,4 @@ const handleSubmit = async (event) => {
     const { name, createdAt, id } = result;
     addComment(text, name, createdAt, id);
   }
-};
-
-form.addEventListener("submit", handleSubmit);
+});
