@@ -44,14 +44,6 @@
       .week-empty {
         margin-bottom: $rem05;
       }
-      .week-party__reset + li {
-        .week-party__start {
-          color: $bg;
-        }
-        div {
-          color: $gray2;
-        }
-      }
     }
     .week-party__parties::-webkit-scrollbar {
       display: none;

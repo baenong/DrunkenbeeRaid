@@ -19,8 +19,6 @@ block content
                     span.week-party__weekday #{week[num]}
                     ul.week-party__parties
                         each party in parties[num] 
-                            if (num === 0) && (party.startAt < "10:00")
-                                .week-party__reset
                             +week-party(party)
                         else 
                             li.week-empty
@@ -30,8 +28,6 @@ block content
                 span.week-party__weekday #{keyword}
                 ul.week-party__parties
                     each party in parties
-                        if (keyword === "수") && (party.startAt < "10:00")
-                            .week-party__reset
                         +week-party(party)
                     else 
                         li.week-empty

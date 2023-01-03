@@ -94,7 +94,7 @@ export const postCreateParty = async (req, res) => {
 export const getWeekParty = async (req, res) => {
   try {
     const wedParty = await Party.find(
-      { weekday: "수" },
+      { weekday: "수", startAt: { $gt: "10:00" } },
       { title: true, startAt: true, members: true }
     )
       .sort({ startAt: "asc" })
@@ -157,12 +157,22 @@ export const selectWeekParty = async (req, res) => {
   } = req;
 
   try {
-    const parties = await Party.find(
-      { weekday: keyword },
-      { title: true, startAt: true, members: true }
-    )
-      .sort({ startAt: "asc" })
-      .populate("members", "name");
+    let parties;
+    if (keyword === "수") {
+      parties = await Party.find(
+        { weekday: "수", startAt: { $gt: "10:00" } },
+        { title: true, startAt: true, members: true }
+      )
+        .sort({ startAt: "asc" })
+        .populate("members", "name");
+    } else {
+      parties = await Party.find(
+        { weekday: keyword },
+        { title: true, startAt: true, members: true }
+      )
+        .sort({ startAt: "asc" })
+        .populate("members", "name");
+    }
 
     return res.render("party/weekParty", {
       pageTitle: "Week",
