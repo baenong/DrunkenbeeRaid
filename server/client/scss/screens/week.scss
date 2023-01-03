@@ -20,26 +20,37 @@
     }
     .week-party__parties {
       flex-grow: 1;
-      .week-party__party {
-        display: flex;
-        .week-party__start {
-          margin-right: $rem15;
-        }
-        div {
-          min-width: 15rem;
-          .week-party__title {
-            font-family: "Jua";
-            font-size: 2rem;
+      & > li {
+        margin-bottom: 5px;
+        .week-party__party {
+          display: flex;
+          .week-party__start {
+            margin-right: $rem15;
           }
-          .week-party__members {
-            .week-party__member {
-              margin-bottom: 5px;
+          div {
+            min-width: 15rem;
+            .week-party__title {
+              font-family: "Jua";
+              font-size: 2rem;
+            }
+            .week-party__members {
+              .week-party__member {
+                margin-bottom: 5px;
+              }
             }
           }
         }
       }
       .week-empty {
         margin-bottom: $rem05;
+      }
+      .week-party__reset + li {
+        .week-party__start {
+          color: $bg;
+        }
+        div {
+          color: $gray2;
+        }
       }
     }
     .week-party__parties::-webkit-scrollbar {

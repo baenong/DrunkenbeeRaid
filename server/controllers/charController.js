@@ -26,7 +26,7 @@ export const postCreateChar = async (req, res) => {
     }
 
     if (classname === "" || classname === undefined) {
-      req.flash("error", "직업을 입력하세요!");
+      req.flash("error", "직업을 선택하세요!");
       return res.status(404).redirect("/character/create");
     }
 

@@ -8,8 +8,39 @@ block content
         .char-info
             .char-label
                 label(for="name") 캐릭터명
-                label(for="classname") 직업
+                label(for="classname") 직 업
             .char-input
-                input(type="text" name="name" id="name" value=`${char ? char.name : ""}`).form-title
-                input(type="text" name="classname" id="classname" value=`${char ? char.classname : ""}`).form-title
+                input(type="text" name="name" id="name" value=`${char ? char.name : ""}` required).form-title
+                select(name="classname" id="classname" value=`${char ? char.classname : ""}` required).form-select
+                    option(value="") 직업을 선택해주세요
+                    optgroup(label="전사")
+                        option(value="버서커") 버서커
+                        option(value="디스트로이어") 디스트로이어
+                        option(value="워로드") 워로드
+                        option(value="홀리나이트") 홀리나이트
+                        option(value="슬레이어") 슬레이어
+                    optgroup(label="무도가")
+                        option(value="인파이터") 인파이터
+                        option(value="배틀마스터") 배틀마스터
+                        option(value="기공사") 기공사
+                        option(value="창술사") 창술사
+                        option(value="스트라이커") 스트라이커
+                    optgroup(label="헌터")
+                        option(value="데빌헌터") 데빌헌터
+                        option(value="블래스터") 블래스터
+                        option(value="호크아이") 호크아이
+                        option(value="스카우터") 스카우터
+                        option(value="건슬링어") 건슬링어
+                    optgroup(label="마법사")
+                        option(value="서머너") 서머너
+                        option(value="아르카나") 아르카나
+                        option(value="바드") 바드
+                        option(value="소서리스") 소서리스
+                    optgroup(label="암살자")
+                        option(value="블레이드") 블레이드
+                        option(value="데모닉") 데모닉
+                        option(value="리퍼") 리퍼
+                    optgroup(label="스페셜리스트")
+                        option(value="도화가") 도화가
+                        option(value="기상술사") 기상술사
         input(type="submit" value="만들기").edit-button.blue

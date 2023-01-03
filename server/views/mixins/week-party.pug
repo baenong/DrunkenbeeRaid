@@ -1,6 +1,6 @@
 mixin week-party(party)
-    a(href=`/party/${party._id}`)
-        li.week-party__party
+    li
+        a(href=`/party/${party._id}`).week-party__party
             span.week-party__start #{party.startAt}
             div
                 span.week-party__title #{party.title}

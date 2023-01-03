@@ -1,7 +1,7 @@
 mixin party(party)
     if (party.startAt < "10:00") && (party.weekday === "수")
-        div.party-mixin__reset
-    div.party-mixin
+        .party-mixin__reset
+    .party-mixin
         a(href=`/party/${party._id}`)
             .party-mixin__info
                 span.party-mixin__title #{party.title}(#{party.comments.length})

@@ -15,8 +15,8 @@ block content
         if user
             .user-memo
                 textarea(rows='4' name="memo" placeholder='Write a memo...').memo #{user.memo ? user.memo : ""}
-        input(type="search" placeholder="캐릭명 검색").char-search
         span.char-list__title 캐릭터 목록
+        input(type="search" placeholder="캐릭명 검색").char-search
         ul.char-list
             each char in chars 
                 if char.owner

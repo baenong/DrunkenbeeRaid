@@ -30,10 +30,30 @@ input.form-title {
   padding: 0.3rem;
   border: 0;
   border-bottom: 0.5px solid $gray6;
-  width: 200px;
 }
 
 .char-search {
   text-align: center;
   margin: 15px 0;
+}
+
+.form-select {
+  color: white;
+  background-color: $bg;
+  font-size: 1.6rem;
+  font-family: "Noto Sans KR", sans-serif;
+  border: 0.5px solid $gray6;
+  border-radius: 5px;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+  padding: 5px;
+}
+
+.form-select::-webkit-scrollbar {
+  width: 3px;
+  height: 1px;
+  background-color: #aaa;
+}
+
+.form-select::-webkit-scrollbar-thumb {
+  background: red;
 }

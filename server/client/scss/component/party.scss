@@ -18,6 +18,9 @@
     .party-mixin__time {
       display: flex;
       align-items: center;
+      span {
+        white-space: nowrap;
+      }
       .party-mixin__start {
         margin-left: $rem05;
       }
