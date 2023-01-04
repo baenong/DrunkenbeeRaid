@@ -6,7 +6,7 @@ import Party from "./models/Party";
  * @ 0 0 10 * * 3 : every wdensday reset parties
  */
 const resetCron = cron.schedule(
-  "0 0 10 * * 3",
+  "0 0 8 * * Wed",
   async () => {
     await Party.updateMany(
       {},
@@ -15,6 +15,7 @@ const resetCron = cron.schedule(
         startAt: "08:00",
       }
     );
+    console.log(`Cron Validate : ${cron.validate("0 0 8 * * Wed")}`);
     console.log(`[${new Date()}] Reset party start time`);
   },
   { scheduled: false }
