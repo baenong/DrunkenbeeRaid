@@ -1,4 +1,6 @@
 mixin party(party)
+    if party.employ
+        .party-mixin__employ
     if (party.startAt < "10:00") && (party.weekday === "수")
         .party-mixin__reset
     .party-mixin

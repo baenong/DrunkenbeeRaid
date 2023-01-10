@@ -8,7 +8,7 @@ const week = ["수", "목", "금", "토", "일", "월", "화"];
 export const home = async (req, res) => {
   try {
     const parties = await Party.find({})
-      .sort({ weekday: "desc" })
+      .sort({ employ: -1, weekday: "desc" })
       .populate("members", "name");
     return res.render("home", { pageTitle: "Home", parties });
   } catch {
@@ -25,7 +25,7 @@ export const search = async (req, res) => {
     if (keyword) {
       if (keyword.startsWith("#")) {
         parties = await Party.find({ hashtags: keyword })
-          .sort({ weekday: "desc" })
+          .sort({ employ: -1, weekday: "desc" })
           .populate("members", "name");
       } else {
         parties = await Party.find({
@@ -34,7 +34,7 @@ export const search = async (req, res) => {
             { weekday: keyword },
           ],
         })
-          .sort({ weekday: "desc" })
+          .sort({ employ: -1, weekday: "desc" })
           .populate("members", "name");
       }
     }
@@ -75,12 +75,15 @@ export const postCreateParty = async (req, res) => {
 
   try {
     const realTitle = title === undefined || title === "" ? "지옥팟" : title;
+    const employ = realTitle.includes("구함") ? true : false;
+
     const newParty = await Party.create({
       title: realTitle,
       members: chars,
       weekday: convertNumToWeek(weekday),
       startAt,
       hashtags: Party.formatHashtags(hashtags),
+      employ,
     });
 
     pushParties(newParty._id, chars);
@@ -251,12 +254,14 @@ export const postEditParty = async (req, res) => {
     pullParties(id, existing);
 
     const week = convertNumToWeek(weekday);
+    const employ = title.includes("구함") ? true : false;
     await Party.findByIdAndUpdate(id, {
       title,
       members: chars,
       weekday: week,
       startAt,
       hashtags: Party.formatHashtags(hashtags),
+      employ,
     });
 
     pushParties(id, chars);

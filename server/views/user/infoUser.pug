@@ -23,13 +23,14 @@ block content
             each schedule in user.parties
                 each num in [0,1,2,3,4,5,6]
                     if schedule.weekday === week[num]
-                        li(id=`weekday${num}`)
-                            .schedule
-                                .schedule-info
-                                    span #{schedule.weekday}
-                                    span #{schedule.startAt}
-                                .schedule-title
-                                    span #{schedule.title}
+                        if !((schedule.weekday === "수") && (schedule.startAt < "10:00"))
+                            li(id=`weekday${num}`)
+                                .schedule
+                                    .schedule-info
+                                        span #{schedule.weekday}
+                                        span #{schedule.startAt}
+                                    .schedule-title
+                                        span #{schedule.title}
         ul#commentContainer.user-info__comment
             each comment in user.comments.reverse()
                 li.comment 
