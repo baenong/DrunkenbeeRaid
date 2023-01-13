@@ -62,14 +62,7 @@ export const getCharInfo = async (req, res) => {
   try {
     const char = await Character.findById(id)
       .populate("owner", ["name"])
-      .populate("parties", [
-        "title",
-        "members",
-        "weekday",
-        "startAt",
-        "comments",
-        "hashtags",
-      ]);
+      .populate("parties");
 
     res.render("char/infoChar", { pageTitle: "Char Info", char });
   } catch {
@@ -88,5 +81,32 @@ export const getEditChar = async (req, res) => {
   } catch {
     req.flash("error", "잘못된 캐릭터ID");
     res.redirect("/");
+  }
+};
+
+export const deleteChar = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+
+  try {
+    const char = await Character.findById(id);
+    if (char.parties.length !== 0) {
+      console.error(new Date());
+      console.error(`Can't delete character : ${char.name}`);
+      console.error(`Party length is not 0 : ${char.parties.length}`);
+      throw "deleteException";
+    }
+    if (!(char.owner === null || char.owner === undefined)) {
+      console.error(new Date());
+      console.error(`Character has owner : ${char.owner}`);
+      throw "deleteException";
+    }
+    await Character.findByIdAndDelete(id);
+    req.flash("success", "캐릭터 삭제");
+  } catch (e) {
+    req.flash("error", "삭제 에러");
+  } finally {
+    return res.redirect("/character");
   }
 };

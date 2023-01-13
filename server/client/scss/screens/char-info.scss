@@ -17,6 +17,13 @@
     }
   }
 
+  .char-info__button {
+    display: flex;
+    a:first-child {
+      margin-right: 10px;
+    }
+  }
+
   .char-info__parties {
     margin-top: $rem10;
   }

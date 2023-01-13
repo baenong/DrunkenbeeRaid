@@ -10,7 +10,9 @@ block content
             span #{char.classname}
             if char.owner
                 span 유저 : #{char.owner.name}
-        a(href=`/character/${char._id}/edit`).edit-button.red edit
+        .char-info__button
+            a(href=`/character/${char._id}/edit`).edit-button.red edit
+            a(href=`/character/${char._id}/delete`).edit-button.red delete
         ul.char-info__parties.party-grid
             each party in char.parties
                 li

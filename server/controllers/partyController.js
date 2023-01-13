@@ -96,60 +96,41 @@ export const postCreateParty = async (req, res) => {
 
 export const getWeekParty = async (req, res) => {
   try {
+    const parties = [];
     const wedParty = await Party.find(
       { weekday: "수", startAt: { $gt: "10:00" } },
       { title: true, startAt: true, members: true }
     )
       .sort({ startAt: "asc" })
       .populate("members", "name");
-    const thuParty = await Party.find(
-      { weekday: "목" },
-      { title: true, startAt: true, members: true }
-    )
-      .sort({ startAt: "asc" })
-      .populate("members", "name");
-    const friParty = await Party.find(
-      { weekday: "금" },
-      { title: true, startAt: true, members: true }
-    )
-      .sort({ startAt: "asc" })
-      .populate("members", "name");
-    const satParty = await Party.find(
-      { weekday: "토" },
-      { title: true, startAt: true, members: true }
-    )
-      .sort({ startAt: "asc" })
-      .populate("members", "name");
-    const sunParty = await Party.find(
-      { weekday: "일" },
-      { title: true, startAt: true, members: true }
-    )
-      .sort({ startAt: "asc" })
-      .populate("members", "name");
-    const monParty = await Party.find(
-      { weekday: "월" },
-      { title: true, startAt: true, members: true }
-    )
-      .sort({ startAt: "asc" })
-      .populate("members", "name");
-    const tueParty = await Party.find(
-      { weekday: "화" },
-      { title: true, startAt: true, members: true }
-    )
-      .sort({ startAt: "asc" })
-      .populate("members", "name");
-    const parties = [
-      wedParty,
-      thuParty,
-      friParty,
-      satParty,
-      sunParty,
-      monParty,
-      tueParty,
-    ];
-    return res.render("party/weekParty", { pageTitle: "Week", parties, week });
-  } catch {
+
+    parties.push(wedParty);
+
+    for (let cnt = 1; cnt < 7; cnt++) {
+      parties.push(
+        await Party.find(
+          { weekday: week[cnt] },
+          { title: true, startAt: true, members: true }
+        )
+          .sort({ startAt: "asc" })
+          .populate("members", "name")
+      );
+    }
+
+    let todayWeek = new Date().getDay() - 3;
+    if (todayWeek < 0) {
+      todayWeek = todayWeek + 7;
+    }
+
+    return res.render("party/weekParty", {
+      pageTitle: "Week",
+      parties,
+      week,
+      todayWeek,
+    });
+  } catch (e) {
     req.flash("error", "파티 조회 실패");
+    console.error(new Date(), e);
     res.redirect("/");
   }
 };
@@ -183,8 +164,9 @@ export const selectWeekParty = async (req, res) => {
       week,
       keyword,
     });
-  } catch {
+  } catch (e) {
     req.flash("error", "파티 조회 실패");
+    console.error(new Date(), e);
     res.redirect("/");
   }
 };
@@ -210,10 +192,12 @@ export const deleteParty = async (req, res) => {
     await Party.findByIdAndDelete(id);
 
     req.flash("success", "파티 삭제됨");
-  } catch (error) {
+  } catch (e) {
     req.flash("error", "에러 발생");
+    console.error(new Date(), e);
+  } finally {
+    return res.redirect("/");
   }
-  return res.redirect("/");
 };
 
 export const getEditParty = async (req, res) => {

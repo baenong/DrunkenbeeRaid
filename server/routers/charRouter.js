@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  deleteChar,
   getCharInfo,
   getCharList,
   getCreateChar,
@@ -16,5 +17,6 @@ charRouter
   .route("/:id([0-9a-f]{24})/edit")
   .get(getEditChar)
   .post(postCreateChar);
+charRouter.get("/:id([0-9a-f]{24})/delete", deleteChar);
 
 export default charRouter;
