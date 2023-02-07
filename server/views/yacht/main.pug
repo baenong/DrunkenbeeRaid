@@ -1,0 +1,22 @@
+doctype html 
+
+html(lang="ko")
+    head 
+        title #{pageTitle}
+        link(rel="stylesheet", href="/static/css/styles.css")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+    body 
+        main#yacht
+            #welcome
+                form#enterRoom
+                    input(placeholder="nickname", required, type="text")#nickname
+                    input(placeholder="room name", required, type="text")#roomname
+                    button Enter Room
+            #room.hidden
+                h3
+                ul 
+                form#message
+                    input(placeholder="message", required, type="text")
+                    button Send
+        script(src="/socket.io/socket.io.js")
+        script(src="/static/js/yacht.js")

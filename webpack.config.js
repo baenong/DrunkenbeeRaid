@@ -9,6 +9,7 @@ module.exports = {
     commentSection: BASE_JS + "commentSection.js",
     editParty: BASE_JS + "editParty.js",
     searchChar: BASE_JS + "searchChar.js",
+    yacht: BASE_JS + "yacht.js",
   },
   plugins: [
     new MiniCssExtractPlugin({
