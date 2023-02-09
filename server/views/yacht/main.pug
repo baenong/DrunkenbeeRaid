@@ -1,4 +1,5 @@
 doctype html 
+include score-board
 
 html(lang="ko")
     head 
@@ -10,13 +11,38 @@ html(lang="ko")
             #welcome
                 form#enterRoom
                     input(placeholder="nickname", required, type="text")#nickname
-                    input(placeholder="room name", required, type="text")#roomname
-                    button Enter Room
-            #room.hidden
+                    button.edit-button.blue 입장
+            #gameScreen.hidden
                 h3
-                ul 
-                form#message
-                    input(placeholder="message", required, type="text")
-                    button Send
+                div
+                    #yachtBoard
+                        #scoreBoard
+                            #player1Score
+                                +score-board()    
+                            #player2Score
+                                +score-board()
+                        #playground.hidden
+                            .playground-header
+                                span 주사위
+                                span 남은 횟수 :
+                                span.leftover 3
+                            ul.dices
+                                li.dice 0
+                                li.dice 0
+                                li.dice 0
+                                li.dice 0
+                                li.dice 0
+                            button.hidden.edit-button.blue 데굴데굴
+                        button.game-start.hidden.edit-button.red 게임 시작
+                    .messages
+                        #announce
+                            span
+                        #chat
+                            
+                            ul 
+                            form#message
+                                input(placeholder="message", required, type="text")
+                                button.edit-button.green 전송
+                            
         script(src="/socket.io/socket.io.js")
         script(src="/static/js/yacht.js")
