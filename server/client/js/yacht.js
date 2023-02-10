@@ -29,6 +29,13 @@ let current;
 let myTurn;
 let isPlayer;
 
+const diceAnimation = [
+  { transform: "rotate(0deg)" },
+  { transform: "rotate(360deg)" },
+  { transform: "rotate(720deg)" },
+];
+const aniDuration = 1000;
+
 const changeTitle = () => {
   const player1Name = scoreboard1.querySelector(".board-title");
   const player2Name = scoreboard2.querySelector(".board-title");
@@ -43,13 +50,27 @@ const changeTitle = () => {
     if (isPlayer) gameStart.classList.remove("hidden");
   }
 };
-
-const addMessage = (message) => {
+const addMessage = (message, color) => {
   const ul = chat.querySelector("ul");
+  const container = chat.querySelector(".chat-container");
   const li = document.createElement("li");
   li.innerText = message;
+  if (color) {
+    li.style.color = color;
+  }
+  const recent =
+    container.scrollHeight - container.clientHeight === container.scrollTop
+      ? true
+      : false;
   ul.appendChild(li);
-  ul.scrollTop = ul.scrollHeight;
+  if (recent) {
+    container.scrollTop = container.scrollHeight;
+  } else {
+    container.animate(
+      [{ backgroundColor: "lime" }, { backgroundColor: "black" }],
+      1500
+    );
+  }
 };
 
 const setAnnounce = (msg) => {
@@ -84,8 +105,9 @@ const gameover = (gameSync) => {
   } else {
     setAnnounce(`${gameSync.player[1]} 승리! 5초 뒤 연결이 종료됩니다.`);
   }
+  socket.disconnect();
   setTimeout(() => {
-    socket.disconnect();
+    location.reload();
   }, 5000);
 };
 
@@ -109,7 +131,7 @@ const rerollable = () => {
 };
 
 const startGame = (msg) => {
-  addMessage(msg);
+  addMessage(msg, "lime");
   playground.classList.remove("hidden");
   gameStart.classList.add("hidden");
   setAnnounce(`${players[0]}'s turn`);
@@ -231,29 +253,38 @@ form.addEventListener("submit", (event) => {
 
     changeTitle();
     if (!isPlayer) {
-      setAnnounce("현재 관전기능 고민중");
+      setAnnounce("관전자로 입장했습니다.");
       playground.classList.remove("hidden");
       socket.emit("crowd_entered", (gameSync) => {
+        gameSync.current === 0
+          ? scoreboard1.classList.add("myturn")
+          : scoreboard2.classList.add("myturn");
         ulDice.childNodes.forEach((liDice, idx) => {
           liDice.innerText =
             gameSync.dices[idx] === undefined ? "0" : gameSync.dices[idx];
         });
         leftover.innerText = gameSync.remain;
         ulScores1.childNodes.forEach((liScore) => {
-          liScore.querySelector(".score").innerText =
-            gameSync.scores1[liScore.className] === undefined
-              ? "0"
-              : gameSync.scores1[liScore.className];
+          if (gameSync.score1[liScore.className] === undefined) {
+            liScore.querySelector(".score").innerText = "";
+          } else {
+            liScore.querySelector(".score").innerText =
+              gameSync.scores1[liScore.className];
+            liScore.classList.add("already");
+          }
         });
         scoreboard1.querySelector(".board-score").innerText =
           gameSync.scores1["total"];
         scoreboard2.querySelector(".board-score").innerText =
           gameSync.scores2["total"];
         ulScores2.childNodes.forEach((liScore) => {
-          liScore.querySelector(".score").innerText =
-            gameSync.scores2[liScore.className] === undefined
-              ? "0"
-              : gameSync.scores2[liScore.className];
+          if (gameSync.score2[liScore.className] === undefined) {
+            liScore.querySelector(".score").innerText = "";
+          } else {
+            liScore.querySelector(".score").innerText =
+              gameSync.scores1[liScore.className];
+            liScore.classList.add("already");
+          }
         });
       });
     }
@@ -269,7 +300,7 @@ chat.addEventListener("submit", (event) => {
   socket.emit("new_message", input.value, (info) => {
     addMessage(`나: ${msg}`);
     if (info) {
-      addMessage(info);
+      addMessage(info, "gold");
     }
   });
   input.value = "";
@@ -287,6 +318,7 @@ rollButton.addEventListener("click", () => {
     ulDice.childNodes.forEach((liDice) => {
       if (liDice.innerText === "0" || liDice.classList.contains("reroll")) {
         liDice.innerText = getRandomDice();
+        liDice.animate(diceAnimation, aniDuration);
         liDice.classList.remove("reroll");
       }
       dices.push(liDice.innerText);
@@ -300,7 +332,11 @@ rollButton.addEventListener("click", () => {
 ulDice.childNodes.forEach((liDice) =>
   liDice.addEventListener("click", (event) => {
     if (rerollable() && myTurn) {
-      event.target.classList.toggle("reroll");
+      const selected = event.target;
+      const idx = [...selected.parentElement.children].indexOf(selected);
+      socket.emit("dice_selected", idx, () => {
+        selected.classList.toggle("reroll");
+      });
     }
   })
 );
@@ -341,7 +377,7 @@ ulScores2.childNodes.forEach((liScore) => {
 
 // request
 socket.on("enter_room", (nick, state, player) => {
-  addMessage(`${state}(${nick}) is arrived`);
+  addMessage(`${state}(${nick})이(가) 들어왔습니다.`, "lime");
   if (state === "player") {
     players = player;
     changeTitle();
@@ -356,9 +392,18 @@ socket.on("game_start", (msg) => {
   startGame(msg);
 });
 
+socket.on("dice_selected", (idx) => {
+  ulDice.childNodes[idx].classList.toggle("reroll");
+});
+
 socket.on("dice_rolled", (dices) => {
   for (let idx = 0; idx < 5; idx++) {
-    ulDice.childNodes[idx].innerText = dices[idx];
+    const rolledDice = ulDice.childNodes[idx];
+    rolledDice.innerText = dices[idx];
+    if (rolledDice.classList.contains("reroll")) {
+      rolledDice.animate(diceAnimation, aniDuration);
+      rolledDice.classList.remove("reroll");
+    }
   }
   if (rerollable()) {
     refreshLeftOver();
@@ -392,5 +437,5 @@ socket.on("game_over", (gameSync) => {
 });
 
 socket.on("bye", (nick) => {
-  addMessage(`${nick} left`);
+  addMessage(`${nick}이(가) 떠났습니다.`, "lime");
 });

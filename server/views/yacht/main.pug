@@ -23,23 +23,22 @@ html(lang="ko")
                                 +score-board()
                         #playground.hidden
                             .playground-header
-                                span 주사위
                                 span 남은 횟수 :
                                 span.leftover 3
+                                button.hidden.edit-button.blue 데굴데굴
                             ul.dices
                                 li.dice 0
                                 li.dice 0
                                 li.dice 0
                                 li.dice 0
                                 li.dice 0
-                            button.hidden.edit-button.blue 데굴데굴
                         button.game-start.hidden.edit-button.red 게임 시작
                     .messages
                         #announce
                             span
                         #chat
-                            
-                            ul 
+                            .chat-container
+                                ul 
                             form#message
                                 input(placeholder="message", required, type="text")
                                 button.edit-button.green 전송

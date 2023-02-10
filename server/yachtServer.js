@@ -1,6 +1,12 @@
 import httpServer from "./server";
 import SocektIO from "socket.io";
 
+// 개선사항
+// 데굴데굴버튼 채팅이랑 안 겹치게 위치 조정좀
+// 채팅 접기 펴기?
+// 현재 입장인원 몇명인지, 누구 들어와있는지 표시
+// 입장화면에서 게임중인지 확인기능
+
 const yachtServer = SocektIO(httpServer);
 
 const roomName = "Drunken Yacht";
@@ -26,9 +32,9 @@ yachtServer.on("connection", (socket) => {
     if (countMember() < 3) {
       gameSync.player.push(nickName);
       gameSync.dices = [];
-      socket["state"] = "player";
+      socket["state"] = "플레이어";
     } else {
-      socket["state"] = "crowd";
+      socket["state"] = "관전자";
     }
     socket
       .to(roomName)
@@ -38,7 +44,7 @@ yachtServer.on("connection", (socket) => {
 
   socket.on("new_message", (msg, done) => {
     if (msg === "/help") {
-      const info = `원본 yacht 게임 규칙을 따라갑니다.
+      const info = `원본 yacht 게임 규칙 준수
       Ones ~ Sixes : 각 주사위 눈의 합
       four of a kind : 동일한 눈 4개가 나온 경우 그 합
       full house : 같은 눈 3개 + 같은 눈 2개
@@ -55,9 +61,14 @@ yachtServer.on("connection", (socket) => {
 
   socket.on("disconnecting", () => {
     if (gameSync.player.includes(socket.nickname)) {
-      gameSync.player.filter((elem) => elem !== socket.nickname);
+      const logoutPlayer = gameSync.player.indexOf(socket.nickname);
+      logoutPlayer === 0
+        ? (gameSync.scores1["total"] = -1)
+        : (gameSync.scores2["total"] = -1);
+      socket.to(roomName).emit("game_over", gameSync);
+    } else {
+      socket.to(roomName).emit("bye", socket.nickname);
     }
-    socket.to(roomName).emit("bye", socket.nickname);
   });
 
   socket.on("disconnect", () => {
@@ -113,5 +124,10 @@ yachtServer.on("connection", (socket) => {
 
   socket.on("crowd_entered", (done) => {
     done(gameSync);
+  });
+
+  socket.on("dice_selected", (idx, done) => {
+    socket.to(roomName).emit("dice_selected", idx);
+    done();
   });
 });
