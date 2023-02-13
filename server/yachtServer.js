@@ -8,8 +8,9 @@ import SocektIO from "socket.io";
 // 입장화면에서 게임중인지 확인기능
 
 const yachtServer = SocektIO(httpServer);
-
 const roomName = "Drunken Yacht";
+
+const nicknames = new Map();
 
 const gameSync = {
   player: [],
@@ -26,20 +27,31 @@ const countMember = () => {
 };
 
 yachtServer.on("connection", (socket) => {
+  socket.on("initial_load", (done) => {
+    done(gameSync);
+  });
+
   socket.on("enter_room", (nickName, done) => {
-    socket.join(roomName);
-    socket["nickname"] = nickName;
-    if (countMember() < 3) {
-      gameSync.player.push(nickName);
-      gameSync.dices = [];
-      socket["state"] = "플레이어";
+    if (!nicknames.has(nickName)) {
+      socket.join(roomName);
+      socket["nickname"] = nickName;
+      nicknames.set(nickName, socket.id);
+
+      if (countMember() < 3) {
+        gameSync.player.push(nickName);
+        gameSync.dices = [];
+        socket["state"] = "플레이어";
+      } else {
+        socket["state"] = "관전자";
+      }
+      yachtServer.emit("waiting_update", gameSync);
+      socket
+        .to(roomName)
+        .emit("enter_room", socket.nickname, socket.state, gameSync.player);
+      done(true, socket.state, gameSync.player);
     } else {
-      socket["state"] = "관전자";
+      done(false);
     }
-    socket
-      .to(roomName)
-      .emit("enter_room", socket.nickname, socket.state, gameSync.player);
-    done(socket.state, gameSync.player);
   });
 
   socket.on("new_message", (msg, done) => {
@@ -72,6 +84,7 @@ yachtServer.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    nicknames.delete(socket.nickname);
     if (countMember() === undefined) {
       gameSync.player = [];
       gameSync.current = 0;
@@ -80,6 +93,7 @@ yachtServer.on("connection", (socket) => {
       gameSync.dices = [];
       gameSync.remain = 3;
       gameSync.turn = 0;
+      yachtServer.emit("waiting_update", gameSync);
     }
   });
 
@@ -110,16 +124,20 @@ yachtServer.on("connection", (socket) => {
     }
   });
 
-  socket.on("score_input", (selected, resultScore) => {
+  socket.on("score_input", (selected, resultScore, acesbonus) => {
     if (gameSync.current === 0) {
       gameSync.scores1[selected] = resultScore;
-      gameSync.scores1["total"] = gameSync.scores1["total"] + resultScore;
+      gameSync.scores1["bonus"] = acesbonus;
+      gameSync.scores1["total"] =
+        gameSync.scores1["total"] + resultScore + acesbonus;
     } else {
       gameSync.scores2[selected] = resultScore;
-      gameSync.scores2["total"] = gameSync.scores2["total"] + resultScore;
+      gameSync.scores2["bonus"] = acesbonus;
+      gameSync.scores2["total"] =
+        gameSync.scores2["total"] + resultScore + acesbonus;
     }
     gameSync.dices = [];
-    socket.to(roomName).emit("score_input", selected, resultScore);
+    socket.to(roomName).emit("score_input", selected, resultScore, acesbonus);
   });
 
   socket.on("crowd_entered", (done) => {
