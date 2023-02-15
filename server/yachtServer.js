@@ -55,13 +55,13 @@ yachtServer.on("connection", (socket) => {
   });
 
   socket.on("new_message", (msg, done) => {
-    if (msg === "/help") {
-      const info = `원본 yacht 게임 규칙 준수
-      Ones ~ Sixes : 각 주사위 눈의 합
-      four of a kind : 동일한 눈 4개가 나온 경우 그 합
+    if (msg === "/help" || msg === "/?") {
+      const info = `Ones ~ Sixes : 각 주사위 눈의 합
+      bonus : ones ~ sixes 점수 합이 63점 이상일 때 35점
+      four of a kind : 동일한 눈 4개가 나온 경우 주사위 5개의 합
       full house : 같은 눈 3개 + 같은 눈 2개
-      little straight : 12345
-      bit straight : 23456
+      little straight : 4개 연속인 경우(1234, 2345, 3456) 15점
+      bit straight : 5개 연속인 경우(12345, 23456) 30점
       yacht : 전부 같은 눈
       choice : 나온 눈의 합`;
       done(info);

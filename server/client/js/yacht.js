@@ -1,34 +1,33 @@
 const socket = io();
 
-// enter
 const welcome = document.getElementById("welcome");
 const form = welcome.querySelector("#enterRoom");
 const currentGame = welcome.querySelector("#currentGame");
 
-// game board
 const gameScreen = document.getElementById("gameScreen");
 const announce = gameScreen.querySelector("#announce span");
 const chat = gameScreen.querySelector("#chat");
 const board = gameScreen.querySelector("#yachtBoard");
 const gameStart = board.querySelector(".game-start");
 
-// playground
 const playground = board.querySelector("#playground");
 const rollButton = playground.querySelector("button");
 const ulDice = playground.querySelector(".dices");
 const leftover = playground.querySelector(".leftover");
 
-// player
 const scoreboard1 = board.querySelector("#player1Score");
 const scoreboard2 = board.querySelector("#player2Score");
 const ulScores1 = scoreboard1.querySelector("ul");
 const ulScores2 = scoreboard2.querySelector("ul");
+
+const yachtNotify = document.getElementById("yachtNotify");
 
 let nickName;
 let players = [];
 let current;
 let myTurn;
 let isPlayer;
+let getBonus = false;
 
 const diceAnimation = [
   { transform: "rotate(0deg)" },
@@ -36,16 +35,8 @@ const diceAnimation = [
   { transform: "rotate(720deg)" },
 ];
 
-const yachtAnimation = [
-  { backgroundColor: "orange" },
-  { backgroundColor: "purple" },
-  { backgroundColor: "orange" },
-  { backgroundColor: "purple" },
-  { backgroundColor: "orange" },
-];
-
 const aniDuration = 1000;
-const yachtDuration = 2000;
+const yachtDuration = 3200;
 
 const changeTitle = () => {
   const player1Name = scoreboard1.querySelector(".board-title");
@@ -107,16 +98,24 @@ const turnover = () => {
   });
 };
 
+const setNotify = (msg) => {
+  yachtNotify.querySelector("span").innerText = msg;
+};
+
 const gameover = (gameSync) => {
   const score1 = gameSync.scores1["total"];
   const score2 = gameSync.scores2["total"];
   if (score1 === score2) {
     setAnnounce("무승부! 5초 뒤 연결이 종료됩니다.");
+    setNotify("Draw!");
   } else if (score1 > score2) {
     setAnnounce(`${gameSync.player[0]} 승리! 5초 뒤 연결이 종료됩니다.`);
+    setNotify(`${gameSync.player[0]} Win!`);
   } else {
     setAnnounce(`${gameSync.player[1]} 승리! 5초 뒤 연결이 종료됩니다.`);
+    setNotify(`${gameSync.player[1]} Win!`);
   }
+  yachtNotify.classList.remove("hidden");
   socket.disconnect();
   setTimeout(() => {
     location.reload();
@@ -231,7 +230,10 @@ const calcScore = (selected) => {
       dices.forEach((dice) => {
         if (dice === 5) {
           resultScore = 50;
-          document.body.animate(yachtAnimation, yachtDuration);
+          yachtNotify.classList.remove("hidden");
+          setTimeout(() => {
+            yachtNotify.classList.add("hidden");
+          }, yachtDuration);
         }
       });
       break;
@@ -246,22 +248,21 @@ const calcScore = (selected) => {
 const calcBonus = (whos) => {
   const whosScore = whos === 0 ? ulScores1 : ulScores2;
   const spanBonus = whosScore.querySelector(".bonus .score");
+  if (getBonus) return 0;
   if (Number(spanBonus.innerText) === 0) {
     const aces = [".ones", ".twos", ".threes", ".fours", ".fives", ".sixes"];
     let sumAces = 0;
     aces.forEach((ace) => {
-      console.log(`${ace} .score`);
       const tempScore = whosScore.querySelector(`${ace} .score`).innerText;
       if (tempScore !== "") sumAces = sumAces + Number(tempScore);
     });
     if (sumAces > 62) {
       spanBonus.innerText = 35;
       spanBonus.classList.add("already");
+      getBonus = true;
       return 35;
     }
     return 0;
-  } else {
-    return 35;
   }
 };
 
@@ -314,6 +315,11 @@ const handleScoreClick = (liScore, whos) => {
   }
 };
 
+const searchMyboard = (scoreboard) => {
+  const boardTitle = scoreboard.querySelector(".board-title");
+  if (boardTitle.innerText === nickName) scoreboard.classList.add("myboard");
+};
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const inputNick = form.querySelector("#nickname");
@@ -324,6 +330,7 @@ form.addEventListener("submit", (event) => {
 
       players = player;
       isPlayer = state === "플레이어" ? true : false;
+      nickName = inputNick.value;
 
       changeTitle();
       if (!isPlayer) {
@@ -342,13 +349,15 @@ form.addEventListener("submit", (event) => {
           reloadScore(gameSync, 0);
           reloadScore(gameSync, 1);
         });
+      } else {
+        searchMyboard(scoreboard1);
+        searchMyboard(scoreboard2);
       }
     } else {
       alert("중복된 닉네임");
+      inputNick.value = "";
     }
   });
-  nickName = inputNick.value;
-  inputNick.value = "";
 });
 
 chat.addEventListener("submit", (event) => {
@@ -373,6 +382,7 @@ gameStart.addEventListener("click", () => {
 rollButton.addEventListener("click", () => {
   if (rerollable()) {
     const dices = [];
+    rollButton.disabled = true;
     ulDice.childNodes.forEach((liDice) => {
       if (liDice.innerText === "0" || liDice.classList.contains("reroll")) {
         liDice.innerText = getRandomDice();
@@ -383,6 +393,9 @@ rollButton.addEventListener("click", () => {
     });
     socket.emit("dice_rolled", dices, () => {
       refreshLeftOver();
+      setTimeout(() => {
+        rollButton.disabled = false;
+      }, 2000);
     });
   }
 });
@@ -480,9 +493,17 @@ socket.on("score_input", (selected, resultScore, acesbonus) => {
   const spanScore = current === 0 ? ulScores1 : ulScores2;
   spanScore.querySelector(`.${selected} .score`).innerText = resultScore;
   spanScore.querySelector(`.${selected}`).classList.add("already");
+  spanScore.querySelectorAll("li").forEach((lis) => {
+    if (lis.classList.contains("last-selected"))
+      lis.classList.remove("last-selected");
+  });
+  spanScore.querySelector(`.${selected}`).classList.add("last-selected");
   spanScore.querySelector(`.bonus .score`).innerText = acesbonus;
   if (selected === "yacht" && resultScore === 50) {
-    document.body.animate(yachtAnimation, yachtDuration);
+    yachtNotify.classList.remove("hidden");
+    setTimeout(() => {
+      yachtNotify.classList.add("hidden");
+    }, yachtDuration);
   }
   if (acesbonus !== 0)
     spanScore.querySelector(".bonus").classList.add("already");

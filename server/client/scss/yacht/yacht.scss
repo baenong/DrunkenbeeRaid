@@ -45,7 +45,7 @@
                 line-height: 2.5rem;
               }
               li:hover {
-                background-color: aqua;
+                background-color: $bg;
               }
               li.already {
                 color: gray;
@@ -53,7 +53,14 @@
               li.already:hover {
                 background-color: $bg;
               }
+              li.last-selected {
+                background-color: rgba(255, 215, 0, 0.5);
+                color: $bg;
+              }
             }
+          }
+          & > div.myboard {
+            background-color: rgba(255, 95, 71, 0.1);
           }
           .myturn {
             border: 2px solid gold;
@@ -106,7 +113,7 @@
               flex-direction: column;
               li {
                 font-size: 1.5rem;
-                line-height: 1.6rem;
+                line-height: 1.8rem;
               }
             }
           }
@@ -127,5 +134,29 @@
         }
       }
     }
+  }
+}
+#yachtNotify {
+  position: absolute;
+  top: calc(50vh - 10rem);
+  width: 100vw;
+  text-align: center;
+  span {
+    font-size: 10rem;
+    font-weight: 700;
+    color: whitesmoke;
+    animation: flicker 0.3s infinite;
+  }
+}
+
+@keyframes flicker {
+  50% {
+    text-shadow: 0 0 11px #fff, 0 0 19px #fff, 0 0 40px red, 0 0 80px yellow,
+      0 0 100px green, 0 0 150px purple;
+  }
+
+  0%,
+  100% {
+    text-shadow: none;
   }
 }
