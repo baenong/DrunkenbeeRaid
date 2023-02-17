@@ -53,14 +53,33 @@ const changeTitle = () => {
   }
 };
 
-const addMessage = (message, color) => {
+const addMessage = (speaker, message, color, emoticon) => {
   const ul = chat.querySelector("ul");
   const container = chat.querySelector(".chat-container");
   const li = document.createElement("li");
-  li.innerText = message;
-  if (color) {
-    li.style.color = color;
+  const spanSpeaker = document.createElement("span");
+  const spanMessage = document.createElement("span");
+  let txtSpeaker = "";
+  switch (speaker) {
+    case "SYSTEM":
+      txtSpeaker = "[SYSTEM] ";
+      break;
+    case "escape":
+      txtSpeaker = "";
+      break;
+    default:
+      txtSpeaker = `${speaker} : `;
   }
+  spanSpeaker.innerText = txtSpeaker;
+  if (color) li.style.color = color;
+  if (speaker === "나") spanSpeaker.style.color = "orange";
+  if (emoticon) {
+    const img = document.createElement("img");
+    img.src = emoticon;
+    spanMessage.appendChild(img);
+  } else spanMessage.innerText = message;
+  li.appendChild(spanSpeaker);
+  li.appendChild(spanMessage);
   const recent =
     container.scrollHeight - container.clientHeight === container.scrollTop
       ? true
@@ -142,7 +161,7 @@ const rerollable = () => {
 };
 
 const startGame = (msg) => {
-  addMessage(msg, "lime");
+  addMessage("SYSTEM", msg, "lime");
   playground.classList.remove("hidden");
   gameStart.classList.add("hidden");
   setAnnounce(`${players[0]}'s turn`);
@@ -364,10 +383,13 @@ chat.addEventListener("submit", (event) => {
   event.preventDefault();
   const input = chat.querySelector("#message input");
   const msg = input.value;
-  socket.emit("new_message", input.value, (info) => {
-    addMessage(`나: ${msg}`);
-    if (info) {
-      addMessage(info, "gold");
+  socket.emit("new_message", input.value, (info, emoticon) => {
+    if (emoticon) {
+      addMessage("나", "", "", emoticon);
+    } else if (info) {
+      addMessage("escape", info, "gold");
+    } else {
+      addMessage("나", msg);
     }
   });
   input.value = "";
@@ -445,15 +467,19 @@ socket.on("waiting_update", (gameSync) => stateUpdate(gameSync));
 
 // request
 socket.on("enter_room", (nick, state, player) => {
-  addMessage(`${state}(${nick})이(가) 들어왔습니다.`, "lime");
+  addMessage("SYSTEM", `${state}(${nick})이(가) 들어왔습니다.`, "lime");
   if (state === "플레이어") {
     players = player;
     changeTitle();
   }
 });
 
-socket.on("new_message", (msg) => {
-  addMessage(msg);
+socket.on("new_message", (speaker, msg) => {
+  addMessage(speaker, msg);
+});
+
+socket.on("new_emoticon", (speaker, emoticon) => {
+  addMessage(speaker, "", "", emoticon);
 });
 
 socket.on("game_start", (msg) => {
@@ -514,5 +540,5 @@ socket.on("game_over", (gameSync) => {
 });
 
 socket.on("bye", (nick) => {
-  addMessage(`${nick}이(가) 떠났습니다.`, "lime");
+  addMessage("SYSTEM", `${nick}이(가) 떠났습니다.`, "lime");
 });

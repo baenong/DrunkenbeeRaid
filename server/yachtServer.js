@@ -12,6 +12,14 @@ const roomName = "Drunken Yacht";
 
 const nicknames = new Map();
 
+const emoticons = {
+  깡: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9hwz-Ko7wuhiobEtk3rG3dURfNR4VvhHqrvmX9ISrzRPmDRReDiC0u3mi3Tp-Opx1n34&usqp=CAU",
+  감사: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTl5LuRvGolooKSYNIAv6EvCWnBTy4Tdj339zJ0oTNcc5NJNA1--WCM8TBZdDchaFhcSfA&usqp=CAU",
+  꺼억: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdCh26sQKuURTRAfR5qAD3B62UT6EMfLBG6X4QKA_jkP71f2Fp9_7k2nWAjiueWmtVym0&usqp=CAU",
+  드가자:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSInE6WhxXYrKkvonfbUqbbKgCeLeTe0fMMnA&usqp=CAU",
+};
+
 const gameSync = {
   player: [],
   current: 0,
@@ -65,9 +73,30 @@ yachtServer.on("connection", (socket) => {
       yacht : 전부 같은 눈
       choice : 나온 눈의 합`;
       done(info);
+    } else if (msg === "/emoticon") {
+      const keys = Object.keys(emoticons);
+      let info = "";
+      keys.forEach((key) => {
+        info = `${info}
+        ${key}`;
+      });
+      done(info);
+    } else if (msg.charAt(0) === "[") {
+      let emoticon = "";
+      const keys = Object.keys(emoticons);
+      for (let idx = 0; idx < keys.length; idx++) {
+        if (msg.includes(keys[idx])) {
+          emoticon = emoticons[keys[idx]];
+          break;
+        }
+      }
+      if (emoticon !== "") {
+        done("emoticon", emoticon);
+        socket.to(roomName).emit("new_emoticon", socket.nickname, emoticon);
+      }
     } else {
       done();
-      socket.to(roomName).emit("new_message", `${socket.nickname}: ${msg}`);
+      socket.to(roomName).emit("new_message", socket.nickname, msg);
     }
   });
 
