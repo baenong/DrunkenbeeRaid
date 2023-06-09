@@ -1,0 +1,49 @@
+doctype html 
+include testmixins
+
+html(lang="ko")
+    head 
+        title #{pageTitle}
+        link(rel="stylesheet", href="/static/css/styles.css")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+    body 
+        main#yacht
+            #welcome
+                form#enterRoom
+                    input(placeholder="nickname", required, type="text")#nickname
+                    button.edit-button.blue 입장
+                div
+                    span#currentGame
+            #gamsScreen.hidden
+                #scores
+                    ul#scoreButton
+                        li.ones 1
+                        li.twos 2
+                        li.threes 3
+                        li.fours 4
+                        li.fives 5
+                        li.sixes 6
+                        li.fourofakind 4K
+                        li.fullhouse FH
+                        li.littlestraight LS
+                        li.bigstraight BS
+                        li.yacht Y
+                        li.choice C
+                    #scoreBoard
+                        #player1Score
+                            +testmixins()
+                        #player2Score 
+                            +testmixins()
+                .messages
+                    #announce
+                        span
+                    #chat
+                        .chat-container
+                            ul 
+                        form#message
+                            input(placeholder="message", required, type="text")
+                            button.edit-button.green 전송
+        div#yachtNotify.hidden
+            span YACHT!
+        script(src="/socket.io/socket.io.js")
+        script(src="/static/js/yacht.js")

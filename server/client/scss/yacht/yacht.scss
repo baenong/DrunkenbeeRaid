@@ -4,6 +4,81 @@
   height: 100vh;
   #welcome {
     margin-top: 30px;
+    .record-title {
+      font-size: 18px;
+      display: block;
+      color: white;
+      font-weight: 600;
+      background-color: #3ea6ff;
+      border-bottom: 3px solid white;
+      margin-top: 30px;
+      padding: 10px 15px;
+    }
+    #records {
+      height: 60vh;
+      overflow-y: scroll;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 0 0 20px 20px;
+
+      .record-lose {
+        color: tomato;
+      }
+      .record-win {
+        color: #3ea6ff;
+      }
+      .record-draw {
+        color: gray;
+      }
+      li.record {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid gray;
+        padding: 8px 0px;
+        .record-meta {
+          display: flex;
+          .record-date {
+            margin-right: 15px;
+          }
+          .record1 {
+            margin-right: 15px;
+          }
+          .record2 {
+            margin-left: 15px;
+          }
+        }
+        .record-detail {
+          margin-top: 10px;
+          table {
+            th,
+            td {
+              text-align: center;
+            }
+            th:first-child,
+            td:first-child {
+              text-align: left;
+            }
+            td {
+              span {
+                margin-right: 10px;
+              }
+            }
+            .record-scores {
+              display: flex;
+              justify-content: space-between;
+              margin-left: 10px;
+              li {
+                width: 30px;
+                text-align: center;
+                padding: 2px 0;
+              }
+            }
+          }
+        }
+      }
+    }
+    #records::-webkit-scrollbar {
+      display: none;
+    }
   }
   #gameScreen {
     height: 100%;

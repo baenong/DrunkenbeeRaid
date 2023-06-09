@@ -1,11 +1,10 @@
 import httpServer from "./server";
 import SocektIO from "socket.io";
+import Yacht from "./models/Yacht.js";
 
 // 개선사항
-// 데굴데굴버튼 채팅이랑 안 겹치게 위치 조정좀
 // 채팅 접기 펴기?
 // 현재 입장인원 몇명인지, 누구 들어와있는지 표시
-// 입장화면에서 게임중인지 확인기능
 
 const yachtServer = SocektIO(httpServer);
 const roomName = "Drunken Yacht";
@@ -23,8 +22,8 @@ const emoticons = {
 const gameSync = {
   player: [],
   current: 0,
-  scores1: { total: 0 },
-  scores2: { total: 0 },
+  scores1: { total: 0, bonus: 0 },
+  scores2: { total: 0, bonus: 0 },
   dices: [0, 0, 0, 0, 0],
   remain: 3,
   turn: 0,
@@ -32,6 +31,48 @@ const gameSync = {
 
 const countMember = () => {
   return yachtServer.sockets.adapter.rooms.get(roomName)?.size;
+};
+
+const sortScores = (target) => {
+  const scoreNames = [
+    "total",
+    "ones",
+    "twos",
+    "threes",
+    "fours",
+    "fives",
+    "sixes",
+    "fourofakind",
+    "fullhouse",
+    "littlestraight",
+    "bigstraight",
+    "yacht",
+    "choice",
+    "bonus",
+  ];
+  const temp = {};
+  scoreNames.map((elem) => {
+    temp[elem] = target[elem];
+  });
+  return Object.values(temp);
+};
+
+const saveRecord = async () => {
+  try {
+    const scores1 = sortScores(gameSync.scores1);
+    const scores2 = sortScores(gameSync.scores2);
+    const winner =
+      scores1[0] > scores2[0] ? 1 : scores1[0] === scores2[0] ? 0 : 2;
+    await Yacht.create({
+      player1: gameSync.player[0],
+      player2: gameSync.player[1],
+      scores1: scores1,
+      scores2: scores2,
+      winner: winner,
+    });
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 yachtServer.on("connection", (socket) => {
@@ -146,6 +187,7 @@ yachtServer.on("connection", (socket) => {
 
     if (gameSync.turn === 24) {
       done(true, gameSync);
+      saveRecord();
       socket.to(roomName).emit("game_over", gameSync);
     } else {
       done(false);
@@ -153,20 +195,16 @@ yachtServer.on("connection", (socket) => {
     }
   });
 
-  socket.on("score_input", (selected, resultScore, acesbonus) => {
-    if (gameSync.current === 0) {
-      gameSync.scores1[selected] = resultScore;
-      gameSync.scores1["bonus"] = acesbonus;
-      gameSync.scores1["total"] =
-        gameSync.scores1["total"] + resultScore + acesbonus;
-    } else {
-      gameSync.scores2[selected] = resultScore;
-      gameSync.scores2["bonus"] = acesbonus;
-      gameSync.scores2["total"] =
-        gameSync.scores2["total"] + resultScore + acesbonus;
-    }
+  socket.on("score_input", (selected, resultScore, acesbonus, truebonus) => {
+    const currScores =
+      gameSync.current === 0 ? gameSync.scores1 : gameSync.scores2;
+    currScores[selected] = resultScore;
+    currScores["bonus"] = truebonus;
+    currScores["total"] += resultScore + acesbonus;
     gameSync.dices = [];
-    socket.to(roomName).emit("score_input", selected, resultScore, acesbonus);
+    socket
+      .to(roomName)
+      .emit("score_input", selected, resultScore, acesbonus, truebonus);
   });
 
   socket.on("crowd_entered", (done) => {

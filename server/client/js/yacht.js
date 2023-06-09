@@ -318,11 +318,13 @@ const handleScoreClick = (liScore, whos) => {
       if (myTurn & (current === whos)) {
         const selectScore = calcScore(spanScore);
         const acesbonus = calcBonus(whos);
+        const truebonus = getBonus ? 35 : 0;
         socket.emit(
           "score_input",
           spanScore.parentNode.className,
           selectScore,
-          acesbonus
+          acesbonus,
+          truebonus
         );
         const total = selectScore + acesbonus;
         addTotalScore(whos, total);
@@ -514,7 +516,7 @@ socket.on("turn_over", (next) => {
   if (myTurn) rollButton.classList.remove("hidden");
 });
 
-socket.on("score_input", (selected, resultScore, acesbonus) => {
+socket.on("score_input", (selected, resultScore, acesbonus, truebonus) => {
   addTotalScore(current, resultScore + acesbonus);
   const spanScore = current === 0 ? ulScores1 : ulScores2;
   spanScore.querySelector(`.${selected} .score`).innerText = resultScore;
@@ -524,14 +526,14 @@ socket.on("score_input", (selected, resultScore, acesbonus) => {
       lis.classList.remove("last-selected");
   });
   spanScore.querySelector(`.${selected}`).classList.add("last-selected");
-  spanScore.querySelector(`.bonus .score`).innerText = acesbonus;
+  spanScore.querySelector(`.bonus .score`).innerText = truebonus;
   if (selected === "yacht" && resultScore === 50) {
     yachtNotify.classList.remove("hidden");
     setTimeout(() => {
       yachtNotify.classList.add("hidden");
     }, yachtDuration);
   }
-  if (acesbonus !== 0)
+  if (truebonus !== 0)
     spanScore.querySelector(".bonus").classList.add("already");
 });
 
@@ -540,5 +542,7 @@ socket.on("game_over", (gameSync) => {
 });
 
 socket.on("bye", (nick) => {
-  addMessage("SYSTEM", `${nick}이(가) 떠났습니다.`, "lime");
+  if (nick !== null) {
+    addMessage("SYSTEM", `${nick}이(가) 떠났습니다.`, "lime");
+  }
 });

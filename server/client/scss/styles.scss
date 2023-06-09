@@ -99,6 +99,22 @@ main {
       }
     }
   }
+  #records {
+    th,
+    td {
+      font-size: 1.3rem;
+    }
+    .record-detail {
+      td:nth-child(2) {
+        width: 30px;
+      }
+    }
+  }
+  #yacht #welcome #records li.record .record-detail table .record-scores {
+    margin-left: 5px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
 }
 
 @keyframes goAway {
