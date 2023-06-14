@@ -163,6 +163,9 @@ $dot-size: 5px;
             background-color: $bg;
             color: gray;
           }
+          li.last-selected {
+            background-color: gold;
+          }
         }
       }
       #rightBoard {
