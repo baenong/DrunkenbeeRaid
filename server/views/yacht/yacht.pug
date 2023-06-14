@@ -1,0 +1,121 @@
+doctype html 
+include score-board
+include dice 
+
+html(lang="ko")
+    head 
+        title #{pageTitle}
+        link(rel="stylesheet", href="/static/css/styles.css")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+    body 
+        main#yacht 
+            #welcome
+                form#enterRoom
+                    div Yacht!
+                    input(placeholder="nickname", required, type="text")#nickname
+                    button.edit-button.blue 입장
+                div
+                    span#currentGame
+                .record-title 대전기록 
+                ul#records 
+                    each record in records
+                        li.record
+                            .record-meta
+                                span.record-date #{record.date.getFullYear()}. #{record.date.getMonth()}. #{record.date.getDate()}.
+                                span.record1 #{record.player1}
+                                span vs
+                                span.record2 #{record.player2}
+                            .record-detail
+                                table 
+                                    thead
+                                        tr 
+                                            th 플레이어
+                                            th 결과
+                                            th
+                                                ul.record-scores
+                                                    li 총점
+                                                    li 1
+                                                    li 2
+                                                    li 3
+                                                    li 4
+                                                    li 5
+                                                    li 6
+                                                    li 4k
+                                                    li fh
+                                                    li ls 
+                                                    li bs 
+                                                    li yt 
+                                                    li ch
+                                                    li bo
+                                    tbody
+                                        tr 
+                                            td
+                                                span #{record.player1}
+                                            if record.winner === 1
+                                                td.record-win 승
+                                            else 
+                                                if record.winner === 2
+                                                    td.record-lose 패
+                                                else 
+                                                    td.record-draw -
+                                            td
+                                                ul.record-scores
+                                                    each score in record.scores1 
+                                                        li #{score}
+                                        tr 
+                                            td 
+                                                span #{record.player2}
+                                            if record.winner === 2
+                                                td.record-win 승
+                                            else 
+                                                if record.winner === 1
+                                                    td.record-lose 패
+                                                else 
+                                                    td.record-draw -
+                                            td
+                                                ul.record-scores
+                                                    each score in record.scores2 
+                                                        li #{score}
+                    else 
+                        span.empty__message 기록이 없습니다.
+            #gameScreen.hidden
+                h3
+                div
+                    #yachtBoard
+                        #scoreBoard
+                            #player1Score
+                                +score-board()  
+                            span.indicator ◀  
+                            #player2Score
+                                +score-board()
+                        #rightBoard
+                            #playground.hidden
+                                .playground-header
+                                    span 남은 횟수 :
+                                    span.leftover 3
+                                    button.hidden.edit-button.blue 데굴데굴
+                                ul.dices
+                                    li
+                                        +dice()
+                                    li
+                                        +dice()
+                                    li
+                                        +dice()
+                                    li
+                                        +dice()
+                                    li
+                                        +dice()
+                            button.game-start.hidden.edit-button.red 게임 시작
+                            .messages
+                                #announce
+                                    span
+                                #chat
+                                    .chat-container
+                                        ul 
+                                    form#message
+                                        input(placeholder="message", required, type="text")
+                                        button.edit-button.green 전송
+        div#yachtNotify.hidden
+            span YACHT!
+        script(src="/socket.io/socket.io.js")
+        script(src="/static/js/yacht.js")

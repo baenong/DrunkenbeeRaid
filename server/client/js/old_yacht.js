@@ -29,6 +29,12 @@ let myTurn;
 let isPlayer;
 let getBonus = false;
 
+const diceAnimation = [
+  { transform: "rotate(0deg)" },
+  { transform: "rotate(360deg)" },
+  { transform: "rotate(720deg)" },
+];
+
 const aniDuration = 1000;
 const yachtDuration = 3200;
 
@@ -95,15 +101,12 @@ const setAnnounce = (msg) => {
 
 const whosturn = () => {
   myTurn = players[current] === nickName ? true : false;
-  const indicator = board.querySelector(".indicator");
-  indicator.innerText = current === 0 ? "◀" : "▶";
 };
 
 const turnover = () => {
   current = current === 0 ? 1 : 0;
   scoreboard1.classList.toggle("myturn");
   scoreboard2.classList.toggle("myturn");
-  whosturn();
   socket.emit("turn_over", current, (isGameover, gameSync) => {
     if (isGameover) {
       gameover(gameSync);
@@ -142,29 +145,10 @@ const getRandomDice = () => {
   return Math.floor(Math.random() * 6) + 1;
 };
 
-const getAngleDice = (val) => {
-  if (val === 0) val = 1;
-  switch (val) {
-    case 1:
-      return [0, 0];
-    case 6:
-      return [0, 180];
-    default:
-      return [(6 - val) * 90, 90];
-  }
-};
-
-const animateDice = (diceVal) => {
-  const [x, y] = getAngleDice(diceVal);
-  return `transform: rotateY(${x}deg) rotateX(${y}deg)`;
-};
-
 const resetDice = () => {
   leftover.innerText = 3;
   ulDice.childNodes.forEach((liDice) => {
-    const dice = liDice.querySelector(".dice");
-    dice.dataset.value = 0;
-    dice.style.cssText = animateDice(0);
+    liDice.innerText = "0";
   });
 };
 
@@ -194,7 +178,7 @@ const calcScore = (selected) => {
   let sumDice = 0;
 
   ulDice.childNodes.forEach((liDice) => {
-    const diceValue = Number(liDice.querySelector(".dice").dataset.value);
+    const diceValue = Number(liDice.innerText);
     if (diceValue !== 0) {
       dices[diceValue - 1]++;
     }
@@ -284,18 +268,16 @@ const calcBonus = (whos) => {
   const whosScore = whos === 0 ? ulScores1 : ulScores2;
   const spanBonus = whosScore.querySelector(".bonus .score");
   if (getBonus) return 0;
-  if (Number(spanBonus.dataset.value) === 0) {
+  if (Number(spanBonus.innerText) === 0) {
     const aces = [".ones", ".twos", ".threes", ".fours", ".fives", ".sixes"];
     let sumAces = 0;
     aces.forEach((ace) => {
-      sumAces =
-        sumAces +
-        Number(whosScore.querySelector(`${ace} .score`).dataset.value);
+      const tempScore = whosScore.querySelector(`${ace} .score`).innerText;
+      if (tempScore !== "") sumAces = sumAces + Number(tempScore);
     });
     if (sumAces > 62) {
-      spanBonus.dataset.value = 35;
       spanBonus.innerText = 35;
-      spanBonus.parentElement.classList.add("already");
+      spanBonus.classList.add("already");
       getBonus = true;
       return 35;
     }
@@ -318,53 +300,39 @@ const reloadScore = (gameSync, whos) => {
   const boardScores = whos === 0 ? scoreboard1 : scoreboard2;
   boardScores.querySelector(".board-score").innerText = arrayScores["total"];
   spanScores.childNodes.forEach((liScore) => {
-    if (
-      liScore.className !== "bonus" &&
-      arrayScores[liScore.className] !== undefined
-    ) {
+    if (arrayScores[liScore.className] === undefined) {
+      liScore.querySelector(".score").innerText = "";
+    } else {
       liScore.querySelector(".score").innerText =
-        arrayScores[liScore.className];
-      liScore.querySelector(".score").dataset.value =
         arrayScores[liScore.className];
       liScore.classList.add("already");
     }
   });
-  ulDice.childNodes.forEach((liDice) => {
-    const dice = liDice.querySelector(".dice");
-    dice.style.cssText = animateDice(Number(dice.dataset.value));
-  });
-  const indicator = board.querySelector(".indicator");
-  indicator.innerText = current === 0 ? "◀" : "▶";
 };
 
 const handleScoreClick = (liScore, whos) => {
-  if (leftover.innerText !== "3") {
-    if (!liScore.classList.contains("bonus")) {
-      if (!liScore.classList.contains("already")) {
-        const spanScore = liScore.querySelector(".score");
-        whosturn();
-        if (myTurn & (current === whos)) {
-          const selectScore = calcScore(spanScore);
-          spanScore.dataset.value = selectScore;
-          const acesbonus = calcBonus(whos);
-          const truebonus = getBonus ? 35 : 0;
-          socket.emit(
-            "score_input",
-            spanScore.parentNode.className,
-            selectScore,
-            acesbonus,
-            truebonus
-          );
-          const total = selectScore + acesbonus;
-          addTotalScore(whos, total);
-          turnover();
-          liScore.classList.add("already");
-          rollButton.classList.add("hidden");
-        }
+  if (!liScore.classList.contains("bonus")) {
+    if (!liScore.classList.contains("already")) {
+      const spanScore = liScore.querySelector(".score");
+      whosturn();
+      if (myTurn & (current === whos)) {
+        const selectScore = calcScore(spanScore);
+        const acesbonus = calcBonus(whos);
+        const truebonus = getBonus ? 35 : 0;
+        socket.emit(
+          "score_input",
+          spanScore.parentNode.className,
+          selectScore,
+          acesbonus,
+          truebonus
+        );
+        const total = selectScore + acesbonus;
+        addTotalScore(whos, total);
+        turnover();
+        liScore.classList.add("already");
+        rollButton.classList.add("hidden");
       }
     }
-  } else {
-    setAnnounce("주사위를 굴려주세요");
   }
 };
 
@@ -395,7 +363,7 @@ form.addEventListener("submit", (event) => {
             : scoreboard2.classList.add("myturn");
           current = gameSync.current;
           ulDice.childNodes.forEach((liDice, idx) => {
-            liDice.querySelector(".dice").dataset.value =
+            liDice.innerText =
               gameSync.dices[idx] === undefined ? "0" : gameSync.dices[idx];
           });
           leftover.innerText = gameSync.remain;
@@ -435,21 +403,17 @@ gameStart.addEventListener("click", () => {
   });
 });
 
-rollButton.addEventListener("click", (e) => {
-  e.preventDefault();
+rollButton.addEventListener("click", () => {
   if (rerollable()) {
     const dices = [];
     rollButton.disabled = true;
     ulDice.childNodes.forEach((liDice) => {
-      const dice = liDice.querySelector(".dice");
-      diceValue = dice.dataset.value;
-      if (diceValue === "0" || liDice.classList.contains("reroll")) {
-        diceValue = getRandomDice();
-        dice.style.cssText = animateDice(diceValue);
+      if (liDice.innerText === "0" || liDice.classList.contains("reroll")) {
+        liDice.innerText = getRandomDice();
+        liDice.animate(diceAnimation, aniDuration);
         liDice.classList.remove("reroll");
-        dice.dataset.value = diceValue;
       }
-      dices.push(diceValue);
+      dices.push(liDice.innerText);
     });
     socket.emit("dice_rolled", dices, () => {
       refreshLeftOver();
@@ -461,9 +425,9 @@ rollButton.addEventListener("click", (e) => {
 });
 
 ulDice.childNodes.forEach((liDice) =>
-  liDice.addEventListener("click", () => {
+  liDice.addEventListener("click", (event) => {
     if (rerollable() && myTurn) {
-      const selected = liDice;
+      const selected = event.target;
       const idx = [...selected.parentElement.children].indexOf(selected);
       socket.emit("dice_selected", idx, () => {
         selected.classList.toggle("reroll");
@@ -530,14 +494,11 @@ socket.on("dice_selected", (idx) => {
 
 socket.on("dice_rolled", (dices) => {
   for (let idx = 0; idx < 5; idx++) {
-    const rolledDice = ulDice.childNodes[idx].querySelector(".dice");
-    if (
-      rolledDice.dataset.value === "0" ||
-      ulDice.childNodes[idx].classList.contains("reroll")
-    ) {
-      rolledDice.dataset.value = dices[idx];
-      rolledDice.style.cssText = animateDice(dices[idx]);
-      ulDice.childNodes[idx].classList.remove("reroll");
+    const rolledDice = ulDice.childNodes[idx];
+    rolledDice.innerText = dices[idx];
+    if (rolledDice.classList.contains("reroll")) {
+      rolledDice.animate(diceAnimation, aniDuration);
+      rolledDice.classList.remove("reroll");
     }
   }
   if (rerollable()) {
@@ -559,24 +520,21 @@ socket.on("score_input", (selected, resultScore, acesbonus, truebonus) => {
   addTotalScore(current, resultScore + acesbonus);
   const spanScore = current === 0 ? ulScores1 : ulScores2;
   spanScore.querySelector(`.${selected} .score`).innerText = resultScore;
-  spanScore.querySelector(`.${selected} .score`).dataset.value = resultScore;
   spanScore.querySelector(`.${selected}`).classList.add("already");
   spanScore.querySelectorAll("li").forEach((lis) => {
     if (lis.classList.contains("last-selected"))
       lis.classList.remove("last-selected");
   });
   spanScore.querySelector(`.${selected}`).classList.add("last-selected");
+  spanScore.querySelector(`.bonus .score`).innerText = truebonus;
   if (selected === "yacht" && resultScore === 50) {
     yachtNotify.classList.remove("hidden");
     setTimeout(() => {
       yachtNotify.classList.add("hidden");
     }, yachtDuration);
   }
-  if (truebonus !== 0) {
+  if (truebonus !== 0)
     spanScore.querySelector(".bonus").classList.add("already");
-    spanScore.querySelector(".bonus").innerText = 35;
-    spanScore.querySelector(".bonus").dataset.value = 35;
-  }
 });
 
 socket.on("game_over", (gameSync) => {

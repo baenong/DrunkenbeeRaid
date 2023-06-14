@@ -1,7 +1,14 @@
+$score-size: 50px;
+
+$dice-size: 30px;
+$dice-trans: 15px;
+$dot-size: 5px;
+
 #yacht {
   font-size: 1.6rem;
   margin-top: 0px;
-  height: 100vh;
+  height: 95vh;
+
   #welcome {
     margin-top: 30px;
     .record-title {
@@ -83,140 +90,244 @@
   #gameScreen {
     height: 100%;
     h3 {
-      font-size: 2.5rem;
+      font-size: 2.3rem;
       text-align: center;
       font-weight: 500;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.8rem;
+      padding-top: 1rem;
     }
     button {
       margin: 0;
       padding: 0.6rem;
+      white-space: nowrap;
     }
     & > div {
-      height: calc(100vh - 3rem);
+      height: 95%;
+    }
+    #yachtBoard {
       display: flex;
       flex-direction: column;
-      #yachtBoard {
-        #scoreBoard {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 10px;
-          & > div {
-            width: 45%;
-            padding: 5px;
-            border: 1px solid $gray6;
-            border-radius: 10px;
-            .board-info {
-              padding-bottom: 5px;
-              margin-bottom: 5px;
-              border-bottom: 1px solid $gray6;
-              .board-score {
-                margin-left: 15px;
-              }
+      height: 100%;
+      #scoreBoard {
+        display: flex;
+        & > div {
+          padding: 5px;
+          .board-info {
+            display: flex;
+            margin-bottom: 3px;
+            justify-content: space-around;
+            .board-title {
+              text-overflow: ellipsis;
             }
-            ul {
-              li {
-                display: flex;
-                justify-content: space-between;
-                line-height: 2.5rem;
-              }
-              li:hover {
-                background-color: $bg;
-              }
-              li.already {
-                color: gray;
-              }
-              li.already:hover {
-                background-color: $bg;
-              }
-              li.last-selected {
-                background-color: rgba(255, 215, 0, 0.5);
-                color: $bg;
-              }
+            .board-score {
+              font-size: 1.8rem;
+              font-weight: 600;
             }
-          }
-          & > div.myboard {
-            background-color: rgba(255, 95, 71, 0.1);
-          }
-          .myturn {
-            border: 2px solid gold;
           }
         }
-        #playground {
-          margin-bottom: 10px;
-          .playground-header {
+
+        & > span {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: tomato;
+          padding: 2.1rem 1rem 0 1rem;
+        }
+
+        .myboard > ul {
+          background-color: rgba(255, 215, 0, 0.5);
+        }
+        .myturn > ul {
+          border: 3px solid tomato;
+        }
+        ul {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          column-gap: 3px;
+          row-gap: 5px;
+          padding: 5px;
+          margin-top: 5px;
+          li {
+            width: 40px;
+            height: 30px;
+            padding: 5px 0;
+            background-color: white;
+            color: $bg;
+            font-size: 1.8rem;
             display: flex;
-            height: 2.8rem;
-            button {
-              margin-left: auto;
-            }
+            justify-content: center;
+            align-items: center;
           }
-          .dices {
-            display: flex;
-            justify-content: space-around;
-            padding-top: 15px;
-            .dice {
-              padding: 10px 15px;
-              border: 1px solid $gray6;
-              border-radius: 5px;
-            }
-            .dice.reroll {
-              background-color: gold;
-              color: $bg;
-            }
+          li.already {
+            background-color: $bg;
+            color: gray;
           }
         }
       }
-      .messages {
-        flex-grow: 1;
+      #rightBoard {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        #announce {
-          color: gold;
-          border-bottom: 0.5px solid gold;
-          padding-bottom: 2px;
+        justify-content: space-around;
+        flex-grow: 1;
+        padding-top: 1.2rem;
+        #playground {
+          .playground-header {
+            display: flex;
+            align-items: center;
+            button {
+              margin-left: 1.5rem;
+            }
+          }
         }
-        #chat {
+        .messages {
+          margin-top: 2.5rem;
           display: flex;
           flex-direction: column;
+          justify-content: flex-end;
           flex-grow: 1;
-          margin-top: 10px;
-          .chat-container {
+          #announce {
+            margin-bottom: 5px;
+            color: tomato;
+          }
+          #chat {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             flex-grow: 1;
-            height: 100px;
-            overflow-y: scroll;
-            ul {
-              display: flex;
-              overflow: hidden;
-              flex-direction: column;
-              li {
-                font-size: 1.5rem;
-                line-height: 1.8rem;
-                display: flex;
-                align-items: center;
-                span:first-child {
-                  margin-right: 5px;
+            bottom: 0;
+            .chat-container {
+              flex-grow: 1;
+              overflow-y: scroll;
+              height: 100px;
+              ul {
+                top: 0;
+                li {
+                  font-size: 1.5rem;
+                  line-height: 1.8rem;
+                  img {
+                    width: 3.2rem;
+                    height: 3.2rem;
+                  }
                 }
-                img {
-                  width: 3.2rem;
-                  height: 3.2rem;
+              }
+            }
+            .chat-container::-webkit-scrollbar {
+              display: none;
+            }
+            #message {
+              display: flex;
+              width: 100%;
+              input {
+                flex-grow: 1;
+                padding: 2px 10px 2px 10px;
+                margin: 5px 15px 0 0;
+              }
+            }
+          }
+        }
+        .dices {
+          position: relative;
+          display: flex;
+          justify-content: space-around;
+          padding-top: 2rem;
+          li {
+            .panel {
+              width: $dice-size;
+              height: $dice-size;
+              perspective: calc($dice-size * 2);
+              // transform: translate(-50%, -50%);
+              .dice {
+                position: relative;
+                transform-style: preserve-3d;
+                transition: transform 1s;
+                width: $dice-size;
+                height: $dice-size;
+
+                .side {
+                  position: absolute;
+                  background-color: white;
+                  width: $dice-size;
+                  height: $dice-size;
+                  border-radius: 15%;
+                }
+                .one {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  transform: rotateX(0deg) translateZ($dice-trans);
+                  z-index: 1;
+                }
+
+                .two {
+                  transform: rotateX(-90deg) translateZ($dice-trans);
+                  z-index: 2;
+                }
+                .three {
+                  transform: rotateY(90deg) translateZ($dice-trans);
+                  z-index: 3;
+                }
+                .two,
+                .three {
+                  display: flex;
+                  justify-content: space-between;
+                }
+                .two .dot:nth-of-type(2),
+                .three .dot:nth-of-type(3) {
+                  align-self: flex-end;
+                }
+
+                .three .dot:nth-of-type(2) {
+                  align-self: center;
+                }
+                .four {
+                  z-index: 4;
+                  transform: rotateX(90deg) translateZ($dice-trans);
+                }
+                .five {
+                  transform: rotateY(-90deg) translateZ($dice-trans);
+                  z-index: 5;
+                }
+                .six {
+                  transform: rotateX(180deg) translateZ($dice-trans);
+                  z-index: 6;
+                }
+                .four,
+                .five,
+                .six {
+                  display: flex;
+                  justify-content: space-between;
+                }
+                .four .dice-column,
+                .five .dice-column,
+                .six .dice-column {
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-between;
+                }
+
+                .five .dice-column:nth-of-type(2) {
+                  justify-content: center;
+                }
+
+                .dot {
+                  display: block;
+                  width: $dot-size;
+                  height: $dot-size;
+                  margin: 1px;
+                  border-radius: 50%;
+                  background-color: black;
                 }
               }
             }
           }
-          .chat-container::-webkit-scrollbar {
-            display: none;
-          }
-
-          #message {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            input {
-              flex-grow: 1;
-              margin-right: 10px;
-              border-radius: 5px;
+          li.reroll {
+            .panel {
+              .dice {
+                .side {
+                  background-color: gold;
+                }
+              }
             }
           }
         }
@@ -224,6 +335,7 @@
     }
   }
 }
+
 #yachtNotify {
   position: absolute;
   top: calc(50vh - 10rem);

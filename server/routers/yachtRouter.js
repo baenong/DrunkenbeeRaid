@@ -1,8 +1,9 @@
 import express from "express";
-import { getYachtMain } from "../controllers/yachtController";
+import { getYacht } from "../controllers/yachtController";
 
 const yachtRouter = express.Router();
 
-yachtRouter.get("/", getYachtMain);
+// yachtRouter.get("/", getYachtMain);
+yachtRouter.get("/", getYacht);
 
 export default yachtRouter;
