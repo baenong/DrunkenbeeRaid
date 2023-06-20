@@ -29,7 +29,6 @@ let myTurn;
 let isPlayer;
 let getBonus = false;
 
-const aniDuration = 1000;
 const yachtDuration = 3200;
 
 const changeTitle = () => {
@@ -142,6 +141,10 @@ const getRandomDice = () => {
   return Math.floor(Math.random() * 6) + 1;
 };
 
+const getRandomAngle = () => {
+  return (Math.floor(Math.random() * 3) - 1) * 360;
+};
+
 const getAngleDice = (val) => {
   if (val === 0) val = 1;
   switch (val) {
@@ -156,7 +159,10 @@ const getAngleDice = (val) => {
 
 const animateDice = (diceVal) => {
   const [x, y] = getAngleDice(diceVal);
-  return `transform: rotateY(${x}deg) rotateX(${y}deg)`;
+
+  return `transform: rotateY(${x + getRandomAngle()}deg) rotateX(${
+    y + getRandomAngle()
+  }deg)`;
 };
 
 const resetDice = () => {
