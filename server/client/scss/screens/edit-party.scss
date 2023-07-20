@@ -12,13 +12,16 @@
     display: flex;
     margin: $rem05 0;
 
+    & > div {
+      display: flex;
+      flex-direction: column;
+    }
+
     label {
       font-size: 1.8rem;
     }
 
     div:first-child {
-      display: flex;
-      flex-direction: column;
       margin-right: 2.5rem;
 
       .party-begin__range,
@@ -42,14 +45,52 @@
       }
     }
 
-    div:last-child {
-      display: flex;
-      flex-direction: column;
+    div.party-begin__time-wrapper {
+      margin-right: 2.5rem;
 
       .party-begin__time {
         margin-top: $rem05;
         width: 15rem;
-        font-family: "Noto Sans KR", sans-serif;
+        font-family: "Pretendard", sans-serif;
+      }
+    }
+
+    div.party-begin__fixed-wrapper {
+      flex-direction: row;
+      align-items: center;
+
+      .party-begin__fixed {
+        display: block;
+        appearance: none;
+        position: relative;
+        background-color: white;
+        border: max(2px, 0.1rem) solid white;
+        border-radius: 0.9rem;
+        width: 5rem;
+        height: 1.8rem;
+        margin-left: 10px;
+      }
+
+      .party-begin__fixed::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        transform: scale(0.8);
+        background-color: gray;
+        transition: left 300ms ease-in-out;
+      }
+
+      .party-begin__fixed:checked::before {
+        background-color: white;
+        left: 3rem;
+      }
+
+      .party-begin__fixed:checked {
+        background-color: $green;
+        border-color: $green;
       }
     }
   }
@@ -64,6 +105,22 @@
   .free-char__list {
     border-bottom: 0.5px solid $gray6;
     border-top: 0.5px solid $gray6;
+    overflow-y: scroll;
+    height: 25vh;
+  }
+
+  .free-char__list::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .free-char__list::-webkit-scrollbar-thumb {
+    height: 15%;
+    background: $red;
+    border-radius: 10px;
+  }
+
+  .free-char__list::-webkit-scrollbar-track {
+    background: rgba(33, 122, 244, 0.1);
   }
 
   .party-hashtag {

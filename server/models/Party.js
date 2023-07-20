@@ -8,6 +8,7 @@ const partySchema = new mongoose.Schema({
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   hashtags: [{ type: String, trim: true }],
   employ: { type: Boolean, default: false },
+  fixed: { type: Boolean, default: false },
 });
 
 partySchema.static("formatHashtags", (hashtags) => {

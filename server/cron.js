@@ -9,7 +9,7 @@ const resetCron = cron.schedule(
   "0 0 8 * * Wed",
   async () => {
     await Party.updateMany(
-      {},
+      { fixed: { $not: true } },
       {
         weekday: "수",
         startAt: "08:00",

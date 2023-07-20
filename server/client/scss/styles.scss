@@ -1,4 +1,5 @@
-@import url(https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&family=Jua&family=Noto+Sans+KR:wght@300;400;500;700&display=swap);
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css");
+@import url(https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&family=Jua&display=swap);
 
 @import "./config/reset.scss";
 @import "./config/variables.scss";
@@ -35,7 +36,7 @@ html {
 }
 
 body {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "Pretendard", sans-serif;
   background-color: $bg;
   color: white;
 }
@@ -62,8 +63,21 @@ main {
   main {
     max-width: 60rem;
   }
-  .char-list {
-    column-count: 2;
+  #partyForm {
+    .party-title {
+      margin-bottom: 5px;
+    }
+    .party-begin {
+      display: flex;
+      flex-direction: column;
+      .party-begin__time-wrapper {
+        display: flex;
+        flex-direction: row;
+        input.party-begin__time {
+          margin: 0 0 0 10px;
+        }
+      }
+    }
   }
 }
 
@@ -71,9 +85,7 @@ main {
   main {
     max-width: 35rem;
   }
-  .char-list {
-    column-count: 1;
-  }
+
   .user-schedules {
     width: 80vw;
     margin-left: 10vw;
@@ -97,6 +109,11 @@ main {
         #weekdaymarks {
           width: 15rem;
         }
+      }
+    }
+    .free-char__list {
+      .free-char {
+        margin-bottom: 0.1rem;
       }
     }
   }

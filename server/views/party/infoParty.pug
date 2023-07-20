@@ -5,6 +5,8 @@ block content
     .party-info__container(data-id=party._id)
         .party-info__title.screen-title
             span #{party.title}
+            if party.fixed
+                span ✅
         .party-info__meta
             span #{party.weekday}
             span #{party.startAt}

@@ -70,12 +70,13 @@ export const getCreateParty = async (req, res) => {
 
 export const postCreateParty = async (req, res) => {
   const {
-    body: { title, weekday, startAt, chars, hashtags },
+    body: { title, weekday, startAt, chars, hashtags, fixed },
   } = req;
 
   try {
     const realTitle = title === undefined || title === "" ? "지옥팟" : title;
     const employ = realTitle.includes("구함") ? true : false;
+    const isfixed = fixed === undefined ? false : true;
 
     const newParty = await Party.create({
       title: realTitle,
@@ -84,6 +85,7 @@ export const postCreateParty = async (req, res) => {
       startAt,
       hashtags: Party.formatHashtags(hashtags),
       employ,
+      fixed: isfixed,
     });
 
     pushParties(newParty._id, chars);
@@ -230,7 +232,7 @@ export const getEditParty = async (req, res) => {
 
 export const postEditParty = async (req, res) => {
   const {
-    body: { title, weekday, startAt, existing, chars, hashtags },
+    body: { title, weekday, startAt, existing, chars, hashtags, fixed },
     params: { id },
   } = req;
 
@@ -239,6 +241,8 @@ export const postEditParty = async (req, res) => {
 
     const week = convertNumToWeek(weekday);
     const employ = title.includes("구함") ? true : false;
+    const isfixed = fixed === undefined ? false : true;
+
     await Party.findByIdAndUpdate(id, {
       title,
       members: chars,
@@ -246,6 +250,7 @@ export const postEditParty = async (req, res) => {
       startAt,
       hashtags: Party.formatHashtags(hashtags),
       employ,
+      fixed: isfixed,
     });
 
     pushParties(id, chars);

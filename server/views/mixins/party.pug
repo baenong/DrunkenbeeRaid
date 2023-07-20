@@ -6,7 +6,7 @@ mixin party(party)
     .party-mixin
         a(href=`/party/${party._id}`)
             .party-mixin__info
-                span.party-mixin__title #{party.title}(#{party.comments.length})
+                span.party-mixin__title #{party.title}(#{party.comments.length})#{party.fixed?'✅':""}
                 .party-mixin__time
                     if (party.startAt < "10:00") && (party.weekday === "수")
                         span.party-mixin__weekday 시간 미지정

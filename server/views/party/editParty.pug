@@ -21,9 +21,15 @@ block content
                     option(value="4" label="일")
                     option(value="5" label="월")
                     option(value="6" label="화")
-            div 
+            div.party-begin__time-wrapper
                 label(for="startAt") 출발시간 : 
                 input(type="time" name="startAt" value=`${selectedParty ? selectedParty.startAt : "20:00"}`).party-begin__time
+            div.party-begin__fixed-wrapper
+                label(for="fixed") 고정팟 : 
+                if selectedParty ? selectedParty.fixed : false
+                    input(type="checkbox" name="fixed" checked).party-begin__fixed
+                else 
+                    input(type="checkbox" name="fixed").party-begin__fixed
         div
             span 현재인원 : 
             span.count-current #{selectedParty ? selectedParty.members.length : 0}
