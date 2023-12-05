@@ -1,4 +1,6 @@
 import express from "express";
+import morgan from "morgan";
+import { logger } from "./log";
 import cors from "cors";
 import session from "express-session";
 import expressFlash from "express-flash";
@@ -17,6 +19,8 @@ app.use(cors());
 
 app.set("view engine", "pug");
 app.set("views", process.cwd() + "/server/views");
+
+app.use(morgan("combined", { stream: logger.stream }));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

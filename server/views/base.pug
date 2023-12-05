@@ -6,6 +6,8 @@ html(lang="ko")
         title #{pageTitle}
         link(rel="stylesheet", href="/static/css/styles.css")
         meta(name="viewport" content="width=device-width, initial-scale=1")
+        meta(property="og:url" content="http://drunkenbeeraid.duckdns.org")
+        meta(property="og:title" content="drunkenbee")
     body 
         if messages.error 
             +message("error", messages.error)

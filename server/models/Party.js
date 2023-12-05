@@ -9,6 +9,7 @@ const partySchema = new mongoose.Schema({
   hashtags: [{ type: String, trim: true }],
   employ: { type: Boolean, default: false },
   fixed: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
 });
 
 partySchema.static("formatHashtags", (hashtags) => {

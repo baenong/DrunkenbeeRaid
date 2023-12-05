@@ -2,17 +2,21 @@ import Character from "../models/Character.js";
 import Party from "../models/Party.js";
 import Comment from "../models/Comment.js";
 import User from "../models/User.js";
+import { logger } from "../log.js";
 
 const week = ["수", "목", "금", "토", "일", "월", "화"];
 
 export const home = async (req, res) => {
   try {
-    const parties = await Party.find({})
+    const parties = await Party.find({
+      disabled: { $ne: true },
+    })
       .sort({ employ: -1, weekday: "desc" })
       .populate("members", "name");
     return res.render("home", { pageTitle: "Home", parties });
-  } catch {
+  } catch (e) {
     req.flash("error", "에러 발생");
+    logger.error(`[${new Date()}] home : ${e}`);
     res.redirect("/");
   }
 };
@@ -24,7 +28,10 @@ export const search = async (req, res) => {
   try {
     if (keyword) {
       if (keyword.startsWith("#")) {
-        parties = await Party.find({ hashtags: keyword })
+        parties = await Party.find({
+          hashtags: keyword,
+          disabled: { $ne: true },
+        })
           .sort({ employ: -1, weekday: "desc" })
           .populate("members", "name");
       } else {
@@ -33,14 +40,16 @@ export const search = async (req, res) => {
             { title: { $regex: new RegExp(keyword, "i") } },
             { weekday: keyword },
           ],
+          disabled: { $ne: true },
         })
           .sort({ employ: -1, weekday: "desc" })
           .populate("members", "name");
       }
     }
     return res.render("home", { pageTitle: "Search", parties });
-  } catch {
+  } catch (e) {
     req.flash("error", "오류 발생");
+    logger.error(`[${new Date()}] search : ${e}`);
     res.redirect("/");
   }
 };
@@ -57,8 +66,9 @@ export const showPartyInfo = async (req, res) => {
       { party: false }
     ).populate("owner", "name");
     res.render("party/infoParty", { pageTitle: "Party Info", party, comments });
-  } catch {
+  } catch (e) {
     req.flash("error", "잘못된 파티ID");
+    logger.error(`${new Date()} wrong party id : ${e}`);
     res.redirect("/");
   }
 };
@@ -86,11 +96,13 @@ export const postCreateParty = async (req, res) => {
       hashtags: Party.formatHashtags(hashtags),
       employ,
       fixed: isfixed,
+      disabled: false,
     });
 
     pushParties(newParty._id, chars);
-  } catch (error) {
+  } catch (e) {
     req.flash("error", "에러 발생");
+    logger.error(`[${new Date()}] postCreateParty : ${e}`);
   }
 
   return res.redirect("/");
@@ -100,7 +112,11 @@ export const getWeekParty = async (req, res) => {
   try {
     const parties = [];
     const wedParty = await Party.find(
-      { weekday: "수", startAt: { $gt: "10:00" } },
+      {
+        weekday: "수",
+        startAt: { $gt: "10:00" },
+        disabled: { $ne: true },
+      },
       { title: true, startAt: true, members: true }
     )
       .sort({ startAt: "asc" })
@@ -111,7 +127,10 @@ export const getWeekParty = async (req, res) => {
     for (let cnt = 1; cnt < 7; cnt++) {
       parties.push(
         await Party.find(
-          { weekday: week[cnt] },
+          {
+            weekday: week[cnt],
+            disabled: { $ne: true },
+          },
           { title: true, startAt: true, members: true }
         )
           .sort({ startAt: "asc" })
@@ -132,7 +151,7 @@ export const getWeekParty = async (req, res) => {
     });
   } catch (e) {
     req.flash("error", "파티 조회 실패");
-    console.error(new Date(), e);
+    logger.error(`[${new Date()}] getWeekParty : ${e}`);
     res.redirect("/");
   }
 };
@@ -146,14 +165,21 @@ export const selectWeekParty = async (req, res) => {
     let parties;
     if (keyword === "수") {
       parties = await Party.find(
-        { weekday: "수", startAt: { $gt: "10:00" } },
+        {
+          weekday: "수",
+          startAt: { $gt: "10:00" },
+          disabled: { $ne: true },
+        },
         { title: true, startAt: true, members: true }
       )
         .sort({ startAt: "asc" })
         .populate("members", "name");
     } else {
       parties = await Party.find(
-        { weekday: keyword },
+        {
+          weekday: keyword,
+          disabled: { $ne: true },
+        },
         { title: true, startAt: true, members: true }
       )
         .sort({ startAt: "asc" })
@@ -168,7 +194,7 @@ export const selectWeekParty = async (req, res) => {
     });
   } catch (e) {
     req.flash("error", "파티 조회 실패");
-    console.error(new Date(), e);
+    logger.error(`[${new Date()}] selectWeekParty : ${e}`);
     res.redirect("/");
   }
 };
@@ -179,7 +205,9 @@ export const deleteParty = async (req, res) => {
   } = req;
 
   try {
-    const selectedParty = await Party.findById(id, { members: true });
+    const selectedParty = await Party.findById(id, {
+      members: true,
+    });
 
     pullParties(id, selectedParty.members);
 
@@ -191,12 +219,15 @@ export const deleteParty = async (req, res) => {
       await deleteCommentOnce(elem);
     });
 
-    await Party.findByIdAndDelete(id);
+    await Party.findByIdAndUpdate(id, {
+      disabled: true,
+    });
+    // await Party.findByIdAndDelete(id);
 
     req.flash("success", "파티 삭제됨");
   } catch (e) {
     req.flash("error", "에러 발생");
-    console.error(new Date(), e);
+    logger.error(`[${new Date()}] deleteParty : ${e}`);
   } finally {
     return res.redirect("/");
   }
@@ -224,8 +255,9 @@ export const getEditParty = async (req, res) => {
       members,
       selectedParty,
     });
-  } catch {
+  } catch (e) {
     req.flash("error", "파티 혹은 캐릭터 조회 실패");
+    logger.error(`[${new Date()}] getEditParty : ${e}`);
     res.redirect("/");
   }
 };
@@ -254,8 +286,9 @@ export const postEditParty = async (req, res) => {
     });
 
     pushParties(id, chars);
-  } catch (error) {
+  } catch (e) {
     req.flash("error", "에러 발생");
+    logger.error(`[${new Date()}] postEditParty : ${e}`);
     return res.redirect("/");
   }
 
@@ -273,6 +306,7 @@ export const postEditComment = async (req, res) => {
 
     if (!owner) {
       req.flash("error", "유저이름이 적절치 않음");
+      logger.warn(`[${new Date()}] Invalid Nickname`);
       return res.sendStatus(404);
     }
 
@@ -293,8 +327,9 @@ export const postEditComment = async (req, res) => {
       createdAt: comment.createdAt,
       id: comment._id,
     });
-  } catch {
+  } catch (e) {
     req.flash("error", "에러 발생");
+    logger.error(`[${new Date()}] postEditComment : ${e}`);
     res.redirect("/");
   }
 };
@@ -311,6 +346,7 @@ export const getDeleteComment = async (req, res) => {
     });
 
     if (!comment) {
+      logger.warn(`[${new Date()}] Comment Not Found`);
       return res.status(400).render("404", { pageTitle: "Comment not found." });
     }
 
@@ -318,8 +354,9 @@ export const getDeleteComment = async (req, res) => {
 
     req.flash("success", "댓글 삭제됨");
     return res.redirect(`/party/${comment.party}`);
-  } catch {
+  } catch (e) {
     req.flash("error", "댓글 삭제 실패");
+    logger.error(`[${new Date()}] getDeleteComment : ${e}`);
     res.redirect("/");
   }
 };

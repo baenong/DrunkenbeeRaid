@@ -25,7 +25,20 @@ export const publicOnlyMiddleware = (req, res, next) => {
 };
 
 export const resetParties = async (req, res, next) => {
-  await Party.updateMany({}, { weekday: "수", startAt: "08:00" });
-  console.log(`[${new Date()}] Reset Party start time`);
+  try {
+    await Party.updateMany(
+      { fixed: { $ne: true } },
+      {
+        weekday: "수",
+        startAt: "08:00",
+      }
+    );
+    console.log(`[${new Date()}] Reset Party start time`);
+  } catch (e) {
+    req.flash("error", "초기화 실패");
+    console.error(new Date(), e);
+    res.redirect("/");
+  }
+
   return next();
 };
