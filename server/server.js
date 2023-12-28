@@ -44,7 +44,7 @@ app.use("/character", charRouter);
 app.use("/yacht", yachtRouter);
 
 resetCron.start();
-console.log("Cron Start");
+logger.info(`[${new Date()}] Cron Start`);
 
 const httpServer = http.createServer(app);
 

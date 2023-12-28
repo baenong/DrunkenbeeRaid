@@ -1,4 +1,5 @@
 import Party from "./models/Party";
+import { logger } from "./log";
 
 export const loginMiddleware = (req, res, next) => {
   res.locals.loggedIn = Boolean(req.session.loggedIn);
@@ -33,10 +34,10 @@ export const resetParties = async (req, res, next) => {
         startAt: "08:00",
       }
     );
-    console.log(`[${new Date()}] Reset Party start time`);
+    logger.info(`[${new Date()}] Reset Party start time`);
   } catch (e) {
     req.flash("error", "초기화 실패");
-    console.error(new Date(), e);
+    logger.error(`[${new Date()}] Reset Failed : ${e}`);
     res.redirect("/");
   }
 

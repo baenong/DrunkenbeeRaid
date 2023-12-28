@@ -1,5 +1,6 @@
 import cron from "node-cron";
 import Party from "./models/Party";
+import { logger } from "./log";
 
 /**
  * @ schedule : seconds minutes hours day month weekday
@@ -15,8 +16,8 @@ const resetCron = cron.schedule(
         startAt: "08:00",
       }
     );
-    console.log(`Cron Validate : ${cron.validate("0 0 8 * * Wed")}`);
-    console.log(`[${new Date()}] Reset party start time`);
+    logger.info(`Cron Validate : ${cron.validate("0 0 8 * * Wed")}`);
+    logger.info(`[${new Date()}] Reset party start time`);
   },
   { scheduled: false }
 );
